@@ -26,21 +26,30 @@ function AccountLogin_OnLoad(self)
 	TokenEnterDialogBackgroundEdit:SetBackdropBorderColor(backdropColor[1], backdropColor[2], backdropColor[3]);
 	TokenEnterDialogBackgroundEdit:SetBackdropColor(backdropColor[4], backdropColor[5], backdropColor[6]);
 
-	self:SetCamera(0);
-	self:SetSequence(0);
+	--self:SetCamera(0);
+	--self:SetSequence(0);
 	
-	if (IsStreamingTrial()) then
-		AccountLoginCinematicsButton:Disable();
-		AccountLogin:SetModel("Interface\\Glues\\Models\\UI_MainMenu\\UI_MainMenu.m2");
-	else
-		AccountLogin:SetModel("Interface\\Glues\\Models\\UI_MainMenu_Northrend\\UI_MainMenu_Northrend.m2");
-	end
+	ShowScene(AccountLogin);
+	--if (IsStreamingTrial()) then
+	--	AccountLoginCinematicsButton:Disable();
+	--	AccountLogin:SetModel("Interface\\Glues\\Models\\UI_MainMenu\\UI_MainMenu.m2");
+	--else
+	--	AccountLogin:SetModel("Interface\\Glues\\Models\\UI_MainMenu_Northrend\\UI_MainMenu_Northrend.m2");
+	--end
 end
 
 function AccountLogin_OnShow(self)
+	--AccountLoginTestButton:Show();
+	--ServerAlertFrame:Show();
+
+	if VX_SOUNDBG then
+		SetCVar("Sound_EnableSoundWhenGameIsInBG", VX_SOUNDBG);
+		VX_SOUNDBG = nil;
+	end
+
 	self:SetSequence(0);
-	PlayGlueMusic(CurrentGlueMusic);
-	PlayGlueAmbience(GlueAmbienceTracks["DARKPORTAL"], 4.0);
+	--PlayGlueMusic(CurrentGlueMusic);
+	--PlayGlueAmbience(GlueAmbienceTracks["DARKPORTAL"], 4.0);
 
 	-- Try to show the EULA or the TOS
 	AccountLogin_ShowUserAgreements();
@@ -48,14 +57,16 @@ function AccountLogin_OnShow(self)
 	local serverName = GetServerName();
 	if(serverName) then
 		AccountLoginRealmName:SetText(serverName);
+		AccountServerListButton:SetText(GetCVar("realmlist"));
+		AccountServerListButton:SetWidth(AccountServerListButton:GetTextWidth());
 	else
 		AccountLoginRealmName:Hide()
 	end
 
 	local accountName = GetSavedAccountName();
 	
-	AccountLoginAccountEdit:SetText(accountName);
-	AccountLoginPasswordEdit:SetText("");
+	if AccountLoginAccountEdit:GetText() == "" then AccountLoginAccountEdit:SetText(accountName); end
+	--AccountLoginPasswordEdit:SetText("");
 	AccountLoginTokenEdit:SetText("");
 	if ( accountName and accountName ~= "" and GetUsesToken() ) then
 		AccountLoginTokenEdit:Show()
@@ -70,7 +81,7 @@ function AccountLogin_OnShow(self)
 	else
 		AccountLogin_FocusPassword();
 	end
-	
+
 	if( IsTrialAccount() ) then
 		AccountLoginUpgradeAccountButton:Show();
 	else
@@ -168,15 +179,23 @@ function AccountLogin_OnEvent(event, arg1, arg2, arg3)
 end
 
 function AccountLogin_Login()
-	PlaySound("gsLogin");
+	-- AccountLoginLoginButton:Disable()
+	--if not AccountLoginForceLogin:GetChecked() then PlaySound("gsLogin");end
 	DefaultServerLogin(AccountLoginAccountEdit:GetText(), AccountLoginPasswordEdit:GetText());
-	AccountLoginPasswordEdit:SetText("");
+	--AccountLoginPasswordEdit:SetText("");
 	
 	if ( AccountLoginSaveAccountName:GetChecked() ) then
 		SetSavedAccountName(AccountLoginAccountEdit:GetText());
 	else
 		SetSavedAccountName("");
 		SetUsesToken(false);
+	end
+
+	if AccountLoginForceLogin:GetChecked() then
+		if not VX_SOUNDBG then
+			VX_SOUNDBG = GetCVar("Sound_EnableSoundWhenGameIsInBG");
+		end
+		SetCVar("Sound_EnableSoundWhenGameIsInBG",0);
 	end
 end
 
@@ -218,6 +237,7 @@ function AccountLogin_Cinematics()
 		PlaySound("gsLoginNewAccount");
 		if ( CinematicsFrame.numMovies > 1 ) then
 			CinematicsFrame:Show();
+			GlueFrameFadeIn(CinematicsFrame, VX_FADE_REFRESH);
 		else
 			MovieFrame.version = 1;
 			SetGlueScreen("movie");
@@ -670,6 +690,74 @@ function WoWAccountSelect_Accept()
 	WoWAccountSelect_SelectAccount(CURRENT_SELECTED_WOW_ACCOUNT);
 end
 
+
+
+function AccountListDropDown_OnClick(self)
+	--GlueDropDownMenu_SetSelectedValue(AccountLoginDropDown, self.value);
+	if strsub(self.value, 1, 3) == "rlm" then
+		for i = 1, #vx.ServerList, 1 do
+			if vx.ServerList[i].Host then
+				if vx.ServerList[i].Host == GetCVar("realmlist") then
+					AccountLoginAccountEdit:SetText(strrev(strsub(vx.ServerList[i].AccountList[tonumber(strsub(self.value, 4))].Login, 16)));
+					AccountLoginPasswordEdit:SetText(strrev(strsub(vx.ServerList[i].AccountList[tonumber(strsub(self.value, 4))].Password, 19)));
+				end
+			end
+		end
+	elseif strsub(self.value, 1, 3) == "all" then
+		AccountLoginAccountEdit:SetText(strrev(strsub(vx.AccountList[tonumber(strsub(self.value, 4))].Login, 16)));
+		AccountLoginPasswordEdit:SetText(strrev(strsub(vx.AccountList[tonumber(strsub(self.value, 4))].Password, 19)));
+	end
+end
+
+function AccountListDropDown_Initialize()
+	local info = {};
+	local count = 0;
+
+	if vx.ServerList then
+		for i = 1, #vx.ServerList, 1 do
+			if vx.ServerList[i].Host then
+				if vx.ServerList[i].Host == GetCVar("realmlist") then
+					if vx.ServerList[i].AccountList then
+						for j = 1, #vx.ServerList[i].AccountList, 1 do
+							info.text = strrev(strsub(vx.ServerList[i].AccountList[j].Login, 16));
+							info.value = "rlm"..j
+							info.func = AccountListDropDown_OnClick;
+							GlueDropDownMenu_AddButton(info);
+							count = count + 1;
+						end
+					end
+				end
+			end
+		end
+	end
+
+	if (vx.AccountList) and (#vx.AccountList>0) then
+		if info.text then
+			info.text = VX_ACCOUNT_SEPARATOR;
+			info.disabled = 1;
+			info.func = nil;
+			GlueDropDownMenu_AddButton(info);
+		end
+
+		info={};
+
+		for i = 1, #vx.AccountList do
+			info.text = strrev(strsub(vx.AccountList[i].Login,16))
+			info.value = "all"..i
+			info.func = AccountListDropDown_OnClick;
+			GlueDropDownMenu_AddButton(info);
+			count = count + 1;
+		end
+	end
+	if count > 0 then
+		AccountListDropDown:Show();
+	else
+		AccountListDropDown:Hide();
+	end
+end
+
+
+
 function AccountLoginDropDown_OnClick(self)
 	GlueDropDownMenu_SetSelectedValue(AccountLoginDropDown, self.value);
 end
@@ -722,7 +810,11 @@ function CinematicsFrame_OnLoad(self)
 	for i = 1, numMovies do
 		_G["CinematicsButton"..i]:Show();
 	end
-	CinematicsBackground:SetHeight(numMovies * 40 + 70);
+	CinematicsBackground:SetHeight(numMovies * 51 + 16 * 2 + 50);
+	local maxbuttonwidth = CinematicsButton1:GetWidth();
+	if CinematicsButton2:GetWidth() > maxbuttonwidth then maxbuttonwidth = CinematicsButton2:GetWidth(); end
+	if CinematicsButton3:GetWidth() > maxbuttonwidth then maxbuttonwidth = CinematicsButton3:GetWidth(); end
+	CinematicsBackground:SetWidth(maxbuttonwidth + 32);
 end
 
 function CinematicsFrame_OnKeyDown(key)
@@ -730,13 +822,20 @@ function CinematicsFrame_OnKeyDown(key)
 		Screenshot();
 	else
 		PlaySound("igMainMenuOptionCheckBoxOff");
-		CinematicsFrame:Hide();
+		GlueFrameFadeOut(CinematicsFrame, VX_FADE_REFRESH, "HIDE");
+		--CinematicsFrame:Hide();
 	end	
 end
 
 function Cinematics_PlayMovie(self)
 	CinematicsFrame:Hide();
 	PlaySound("gsTitleOptionOK");
-	MovieFrame.version = self:GetID();
+	CinematicsFrame.id = self:GetID();
+	--GlueFrameFadeOut(AccountLogin, VX_FADE_UNLOAD, Cinematics_PlayMovie_Wait);
+--end
+
+--function Cinematics_PlayMovie_Wait()
+	MovieFrame.version = CinematicsFrame.id;
+	CinematicsFrame.id = nil;
 	SetGlueScreen("movie");
 end

@@ -16,6 +16,7 @@ function UpdateAddonButton()
 		CharacterSelectAddonsButton:Show();
 	else
 		CharacterSelectAddonsButton:Hide();
+
 	end
 end
 
@@ -174,13 +175,16 @@ end
 function AddonList_OnOk()
 	PlaySound("gsLoginChangeRealmOK");
 	SaveAddOns();
-	AddonList:Hide();
+	--AddonList:Hide();
+	GlueFrameFadeOut(AddonList, VX_FADE_REFRESH, "HIDE");
+
 end
 
 function AddonList_OnCancel()
 	PlaySound("gsLoginChangeRealmCancel");
 	ResetAddOns();
-	AddonList:Hide();
+	--AddonList:Hide();
+	GlueFrameFadeOut(AddonList, VX_FADE_REFRESH, "HIDE");
 end
 
 function AddonListScrollFrame_OnVerticalScroll(self, offset)
@@ -320,7 +324,8 @@ function AddonDialog_Show(which, arg1)
 end
 
 function AddonDialog_OnClick(index)
-	AddonDialog:Hide();
+	--AddonDialog:Hide();
+	GlueFrameFadeOut(AddonDialog, VX_FADE_REFRESH, "HIDE");
 	if ( index == 1 ) then
 		local OnAccept = AddonDialogTypes[AddonDialog.which].OnAccept;
 		if ( OnAccept ) then

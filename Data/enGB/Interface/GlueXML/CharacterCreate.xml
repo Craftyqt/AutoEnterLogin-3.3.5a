@@ -65,7 +65,7 @@
 			<Layer level="ARTWORK">
 				<FontString name="$parentText" inherits="GlueFontNormalSmall">
 					<Anchors>
-						<Anchor point="BOTTOM" relativePoint="TOP" x="0" y="2"/>
+						<Anchor point="BOTTOM" relativePoint="TOP" x="1" y="2"/>
 					</Anchors>
 				</FontString>
 			</Layer>
@@ -204,7 +204,7 @@
 					<Frame name="CharacterCreateWoWLogo">
 						<Size x="256" y="128"/>
 						<Anchors>
-							<Anchor point="TOPRIGHT" x="-9" y="0"/>
+							<Anchor point="TOPRIGHT" x="-10" y="5"/>
 						</Anchors>
 						<Layers>
 							<Layer level="ARTWORK">
@@ -218,9 +218,9 @@
 						</Layers>
 					</Frame>
 					<Frame name="CharacterCreateCharacterRace">
-						<Size x="267" y="287"/>
+						<Size x="267" y="277"/>
 						<Anchors>
-							<Anchor point="TOP" relativeTo="CharacterCreateWoWLogo" relativePoint="BOTTOM" x="-5" y="5"/>
+							<Anchor point="TOP" relativeTo="CharacterCreateWoWLogo" relativePoint="BOTTOM" x="0" y="10"/>
 						</Anchors>
 						<Layers>
 							<Layer level="BORDER">
@@ -253,7 +253,7 @@
 						</Backdrop>
 						<Frames>
 							<ScrollFrame name="CharacterCreateRaceScrollFrame" inherits="GlueScrollFrameTemplate">
-								<Size x="220" y="220"/>
+								<Size x="220" y="210"/>
 								<Anchors>
 									<Anchor point="TOPLEFT" x="20" y="-55"/>
 								</Anchors>
@@ -293,9 +293,9 @@
 						</Frames>
 					</Frame>
 					<Frame name="CharacterCreateCharacterClass">
-						<Size x="267" y="287"/>
+						<Size x="267" y="277"/>
 						<Anchors>
-							<Anchor point="TOP" relativeTo="CharacterCreateCharacterRace" relativePoint="BOTTOM" x="-5" y="-5"/>
+							<Anchor point="TOP" relativeTo="CharacterCreateCharacterRace" relativePoint="BOTTOM" x="0" y="0"/>
 						</Anchors>
 						<Layers>
 							<Layer level="BORDER">
@@ -328,7 +328,7 @@
 						</Backdrop>
 						<Frames>
 							<ScrollFrame name="CharacterCreateClassScrollFrame" inherits="GlueScrollFrameTemplate">
-								<Size x="220" y="220"/>
+								<Size x="220" y="210"/>
 								<Anchors>
 									<Anchor point="TOPLEFT" x="20" y="-55"/>
 								</Anchors>
@@ -370,7 +370,7 @@
 					<Frame name="CharacterCreateConfigurationFrame">
 						<Size x="256" y="758"/>
 						<Anchors>
-							<Anchor point="TOPLEFT" relativeTo="CharacterCreateFrame" relativePoint="TOPLEFT" x="9" y="-5"/>
+							<Anchor point="TOPLEFT" relativeTo="CharacterCreateFrame" relativePoint="TOPLEFT" x="0" y="-5"/>
 						</Anchors>
 						<Layers>
 							<Layer level="ARTWORK">
@@ -414,7 +414,7 @@
 							<Layer level="OVERLAY">
 								<FontString name="CharacterCreateAllianceLabel" inherits="FactionName_Shadow_Huge" text="ALLIANCE">
 									<Anchors>
-										<Anchor point="TOP" relativePoint="TOP" x="-50" y="-20"/>
+										<Anchor point="TOP" relativePoint="TOP" x="-49" y="-20"/>
 									</Anchors>
 								</FontString>
 								<FontString name="CharacterCreateHordeLabel" inherits="FactionName_Shadow_Huge" text="HORDE">
@@ -429,13 +429,13 @@
 -->
 								<FontString name="CharacterCreateGender" inherits="CharacterCreateTooltipFont">
 									<Anchors>
-										<Anchor point="BOTTOM" relativePoint="TOP" x="0" y="-388"/>
+										<Anchor point="BOTTOM" relativePoint="TOP" x="0" y="-380"/>
 									</Anchors>
 									<Color r="1.0" g="0.78" b="0"/>
 								</FontString>
 								<FontString name="CharacterCreateClassName" inherits="CharacterCreateTooltipFont">
 									<Anchors>
-										<Anchor point="BOTTOM" relativePoint="TOP" x="0" y="-456"/>
+										<Anchor point="BOTTOM" relativePoint="TOP" x="0" y="-450"/>
 									</Anchors>
 									<Color r="1.0" g="0.78" b="0"/>
 								</FontString>
@@ -494,7 +494,7 @@
 							</CheckButton>
 							<CheckButton name="CharacterCreateGenderButtonMale" inherits="CharacterCreateGenderButtonTemplate">
 								<Anchors>
-									<Anchor point="TOP" x="-20" y="-392"/>
+									<Anchor point="TOP" x="-20" y="-385"/>
 								</Anchors>
 								<Scripts>
 									<OnLoad>
@@ -515,7 +515,7 @@
 							</CheckButton>
 							<CheckButton name="CharacterCreateGenderButtonFemale" inherits="CharacterCreateGenderButtonTemplate">
 								<Anchors>
-									<Anchor point="TOP" x="20" y="-392"/>
+									<Anchor point="TOP" x="20" y="-385"/>
 								</Anchors>
 								<Scripts>
 									<OnLoad>
@@ -536,7 +536,7 @@
 							</CheckButton>
 							<CheckButton name="CharacterCreateClassButton1" inherits="CharacterCreateClassButtonTemplate" id="1">
 								<Anchors>
-									<Anchor point="TOP" x="-90" y="-463"/>
+									<Anchor point="TOP" x="-90" y="-456"/>
 								</Anchors>
 							</CheckButton>
 							<CheckButton name="CharacterCreateClassButton2" inherits="CharacterCreateClassButtonTemplate" id="2">
@@ -584,10 +584,10 @@
 									<Anchor point="TOP" relativeTo="CharacterCreateClassButton5" relativePoint="BOTTOM" x="0" y="-6"/>
 								</Anchors>
 							</CheckButton>
-							<Button name="CharCreateRandomizeButton" inherits="GlueButtonSmallTemplate" text="RANDOMIZE">
-								<Size x="146" y="30"/>
+							<Button name="CharCreateRandomizeButton" inherits="GlueButtonTemplate" text="RANDOMIZE">
+								<Size x="150" y="51"/>
 								<Anchors>
-									<Anchor point="BOTTOM" x="0" y="10"/>
+									<Anchor point="BOTTOM" x="0" y="7"/>
 								</Anchors>
 								<Scripts>
 									<OnLoad>
@@ -596,14 +596,11 @@
 									<OnClick>
 										CharacterCreate_Randomize();
 									</OnClick>
-									<OnUpdate>
-										CharacterCreate_DeathKnightSwap(self);
-									</OnUpdate>
 								</Scripts>
 							</Button>
 							<Frame name="CharacterCustomizationButtonFrame5" inherits="CharacterCustomizationFrameTemplate" id="5">
 								<Anchors>
-									<Anchor point="BOTTOM" relativeTo="CharCreateRandomizeButton" relativePoint="TOP" x="-6" y="3"/>
+									<Anchor point="BOTTOM" relativeTo="CharCreateRandomizeButton" relativePoint="TOP" x="-6" y="-3"/>
 								</Anchors>
 							</Frame>
 							<Frame name="CharacterCustomizationButtonFrame4" inherits="CharacterCustomizationFrameTemplate" id="4">
@@ -628,10 +625,25 @@
 							</Frame>
 						</Frames>
 					</Frame>
+					<Button name="CharacterCreateRandomName" inherits="GlueButtonTemplate" text="RANDOMIZE">
+						<Size x="156" y="51"/>
+						<Anchors>
+							<Anchor point="BOTTOM" x="0" y="7"/>
+						</Anchors>
+						<Scripts>
+							<OnLoad>
+								self:SetWidth(self:GetTextWidth() + 50);
+							</OnLoad>
+							<OnClick>
+								CharacterCreateNameEdit:SetText(GetRandomName());
+								PlaySound("gsCharacterCreationLook");
+							</OnClick>
+						</Scripts>
+					</Button>
 					<EditBox name="CharacterCreateNameEdit" letters="12">
 						<Size x="156" y="40"/>
 						<Anchors>
-							<Anchor point="BOTTOM" x="0" y="55"/>
+							<Anchor point="BOTTOM" relativeTo="CharacterCreateRandomName" relativePoint="TOP" x="0" y="-8"/>
 						</Anchors>
 						<Layers>
 							<Layer level="BACKGROUND">
@@ -667,28 +679,10 @@
 							<AbsInset left="15"/>
 						</TextInsets>
 					</EditBox>
-					<Button name="CharacterCreateRandomName" inherits="GlueButtonSmallTemplate" text="RANDOMIZE" hidden="true">
-						<Size x="146" y="30"/>
-						<Anchors>
-							<Anchor point="TOP" relativeTo="CharacterCreateNameEdit" relativePoint="BOTTOM" x="0" y="7"/>
-						</Anchors>
-						<Scripts>
-							<OnLoad>
-								self:SetWidth(self:GetTextWidth() + 50);
-							</OnLoad>
-							<OnClick>
-								CharacterCreateNameEdit:SetText(GetRandomName());
-								PlaySound("gsCharacterCreationLook");
-							</OnClick>
-							<OnUpdate>
-								CharacterCreate_DeathKnightSwap(self);
-							</OnUpdate>
-						</Scripts>
-					</Button>
 					<Button name="CharacterCreateRotateLeft">
 						<Size x="50" y="50"/>
 						<Anchors>
-							<Anchor point="BOTTOM" x="-16" y="-5"/>
+							<Anchor point="LEFT" relativeTo="CharacterCreateNameEdit" relativePoint="RIGHT" x="-10" y="2"/>
 						</Anchors>
 						<HitRectInsets>
 							<AbsInset left="13" right="13" top="10" bottom="13"/>
@@ -720,7 +714,7 @@
 					<Button name="CharacterCreateRotateRight">
 						<Size x="50" y="50"/>
 						<Anchors>
-							<Anchor point="BOTTOM" x="16" y="-5"/>
+							<Anchor point="RIGHT" relativeTo="CharacterCreateNameEdit" relativePoint="LEFT" x="14" y="2"/>
 						</Anchors>
 						<HitRectInsets>
 							<AbsInset left="13" right="13" top="10" bottom="13"/>
@@ -745,36 +739,33 @@
 							</Anchors>
 						</HighlightTexture>
 					</Button>
-					<Button name="CharCreateOkayButton" inherits="GlueButtonTemplate" text="CHARACTER_CREATE_ACCEPT">
-						<Size x="160" y="35"/>
+					<Button name="CharCreateBackButton" inherits="GlueButtonTemplate" text="BACK">
+						<Size x="150" y="51"/>
 						<Anchors>
-							<Anchor point="TOP" relativeTo="CharacterCreateCharacterClass" relativePoint="BOTTOM" x="4" y="-3"/>
-						</Anchors>
-						<Scripts>
-							<OnClick>
-								CharacterCreate_Okay();
-							</OnClick>
-							<OnUpdate>
-								CharacterCreate_DeathKnightSwap(self);
-							</OnUpdate>
-						</Scripts>
-					</Button>
-					<Button name="CharCreateBackButton" inherits="GlueButtonSmallTemplate" text="BACK">
-						<Size x="120" y="30"/>
-						<Anchors>
-							<Anchor point="TOP" relativeTo="CharCreateOkayButton" relativePoint="BOTTOM" x="4" y="3"/>
+							<Anchor point="BOTTOMRIGHT" x="-5" y="5"/>
 						</Anchors>
 						<Scripts>
 							<OnClick>
 								CharacterCreate_Back();
 							</OnClick>
-							<OnUpdate>
-								CharacterCreate_DeathKnightSwap(self);
-							</OnUpdate>
+						</Scripts>
+					</Button>
+					<Button name="CharCreateOkayButton" inherits="GlueButtonTemplate" text="CHARACTER_CREATE_ACCEPT">
+						<Size x="150" y="51"/>
+						<Anchors>
+							<Anchor point="BOTTOM" relativeTo="CharCreateBackButton" relativePoint="TOP" x="0" y="-8"/>
+						</Anchors>
+						<Scripts>
+							<OnClick>
+								CharacterCreate_Okay();
+							</OnClick>
 						</Scripts>
 					</Button>
 				</Frames>
 				<Scripts>
+					<OnShow>
+						CharacterCreateLogo:SetTexture(VX_LOGO_TEXTURE);
+					</OnShow>
 					<OnMouseDown>
 						CharacterCreateFrame_OnMouseDown(button);
 					</OnMouseDown>

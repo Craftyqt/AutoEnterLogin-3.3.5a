@@ -2,12 +2,13 @@ function RealmWizard_OnLoad(self)
 	self:SetCamera(0);
 	self:SetSequence(0);
 
-	if (IsStreamingTrial()) then
-		AccountLoginCinematicsButton:Disable();
-		RealmWizard:SetModel("Interface\\Glues\\Models\\UI_MainMenu\\UI_MainMenu.m2");
-	else
-		RealmWizard:SetModel("Interface\\Glues\\Models\\UI_MainMenu_Northrend\\UI_MainMenu_Northrend.m2");
-	end
+	ShowScene(RealmWizard);
+	--if (IsStreamingTrial()) then
+	--	AccountLoginCinematicsButton:Disable();
+	--	RealmWizard:SetModel("Interface\\Glues\\Models\\UI_MainMenu\\UI_MainMenu.m2");
+	--else
+	--	RealmWizard:SetModel("Interface\\Glues\\Models\\UI_MainMenu_Northrend\\UI_MainMenu_Northrend.m2");
+	--end
 end
 
 function RealmWizard_OnShow(self)

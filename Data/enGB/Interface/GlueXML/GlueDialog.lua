@@ -164,6 +164,10 @@ GlueDialogTypes["CANCEL"] = {
 	button1 = CANCEL,
 	button2 = nil,
 	OnAccept = function()
+		if VX_SOUNDBG then
+			SetCVar("Sound_EnableSoundWhenGameIsInBG", VX_SOUNDBG);
+			VX_SOUNDBG = nil;
+		end
 		StatusDialogClick();
 	end,
 	OnCancel = function()
@@ -522,63 +526,68 @@ function GlueDialog_Show(which, text, data)
 		glueText:SetText(dialogInfo.text);
 	end
 
-	-- Set the buttons of the dialog
-	if ( dialogInfo.button3 ) then
-		GlueDialogButton1:ClearAllPoints();
-		GlueDialogButton2:ClearAllPoints();
-		GlueDialogButton3:ClearAllPoints();
-	
-		if ( dialogInfo.displayVertical ) then
-			GlueDialogButton3:SetPoint("BOTTOM", "GlueDialogBackground", "BOTTOM", 0, 16);
-			GlueDialogButton2:SetPoint("BOTTOM", "GlueDialogButton3", "TOP", 0, 0);
-			GlueDialogButton1:SetPoint("BOTTOM", "GlueDialogButton2", "TOP", 0, 0);
-		else
-			GlueDialogButton1:SetPoint("BOTTOMLEFT", "GlueDialogBackground", "BOTTOMLEFT", 60, 16);
-			GlueDialogButton2:SetPoint("LEFT", "GlueDialogButton1", "RIGHT", -8, 0);
-			GlueDialogButton3:SetPoint("LEFT", "GlueDialogButton2", "RIGHT", -8, 0);
-		end
-
-		GlueDialogButton2:SetText(dialogInfo.button2);
-		GlueDialogButton2:Show();
-		GlueDialogButton3:SetText(dialogInfo.button3);
-		GlueDialogButton3:Show();
-	elseif ( dialogInfo.button2 ) then
-		GlueDialogButton1:ClearAllPoints();
-		GlueDialogButton2:ClearAllPoints();
-	
-		if ( dialogInfo.displayVertical ) then
-			GlueDialogButton2:SetPoint("BOTTOM", "GlueDialogBackground", "BOTTOM", 0, 16);
-			GlueDialogButton1:SetPoint("BOTTOM", "GlueDialogButton2", "TOP", 0, 0);
-		else
-			GlueDialogButton1:SetPoint("BOTTOMRIGHT", "GlueDialogBackground", "BOTTOM", -6, 16);
-			GlueDialogButton2:SetPoint("LEFT", "GlueDialogButton1", "RIGHT", 13, 0);
-		end
-
-		GlueDialogButton2:SetText(dialogInfo.button2);
-		GlueDialogButton2:Show();
-		GlueDialogButton3:Hide();
-	else
-		GlueDialogButton1:ClearAllPoints();
-		GlueDialogButton1:SetPoint("BOTTOM", "GlueDialogBackground", "BOTTOM", 0, 16);
-		GlueDialogButton2:Hide();
-		GlueDialogButton3:Hide();
-	end
-
-	GlueDialogButton1:SetText(dialogInfo.button1);
-
 	-- Set the miscellaneous variables for the dialog
 	GlueDialog.which = which;
 	GlueDialog.data = data;
 
-	-- Show or hide the alert icon
-	if ( dialogInfo.showAlert ) then
-		GlueDialogBackground:SetWidth(GlueDialogBackground.alertWidth);
-		GlueDialogAlertIcon:Show();
-	else
-		GlueDialogBackground:SetWidth(GlueDialogBackground.origWidth);
-		GlueDialogAlertIcon:Hide();
-	end
 	GlueDialogText:SetWidth(GlueDialogText.origWidth);
+
+	--------------------------------------------------------------------------------------
+	--/ Vars
+	local bText;
+	local bHSpace = 0;
+	local bVSpace = 0;
+	local bSideTextField = 50;
+	local dHBorderSpace = 32;
+	local dVBorderSpace = 16;
+	local bMaxWidth = 256;
+	local dWidth;
+	local dHeight;
+	local textHeight, _;
+	local textWidth, _;
+	--\
+
+	--/ Set width of the dialog buttons +editbox
+	if ( dialogInfo.button3 ) then
+		GlueDialogButton1:ClearAllPoints();
+		GlueDialogButton2:ClearAllPoints();
+		GlueDialogButton3:ClearAllPoints();
+
+		GlueDialogButton2:SetText(dialogInfo.button2);
+		bText = _G[GlueDialogButton2:GetName().."Text"];
+		GlueDialogButton2:SetWidth(bText:GetWidth() + bSideTextField*2);
+		if bMaxWidth < GlueDialogButton2:GetWidth() then
+			bMaxWidth = GlueDialogButton2:GetWidth();
+		end
+
+		GlueDialogButton3:SetText(dialogInfo.button3);
+		bText = _G[GlueDialogButton3:GetName().."Text"];
+		GlueDialogButton3:SetWidth(bText:GetWidth() + bSideTextField*2);
+		if bMaxWidth < GlueDialogButton3:GetWidth() then
+			bMaxWidth = GlueDialogButton3:GetWidth();
+		end
+
+	elseif ( dialogInfo.button2 ) then
+		GlueDialogButton1:ClearAllPoints();
+		GlueDialogButton2:ClearAllPoints();
+	
+		GlueDialogButton2:SetText(dialogInfo.button2);
+		bText = _G[GlueDialogButton2:GetName().."Text"];
+		GlueDialogButton2:SetWidth(bText:GetWidth() + bSideTextField*2);
+		if bMaxWidth < GlueDialogButton2:GetWidth() then
+			bMaxWidth = GlueDialogButton2:GetWidth();
+		end
+
+	else
+		GlueDialogButton1:ClearAllPoints();
+	end
+
+	GlueDialogButton1:SetText(dialogInfo.button1);
+	bText = _G[GlueDialogButton1:GetName().."Text"];
+	GlueDialogButton1:SetWidth(bText:GetWidth() + bSideTextField*2);
+	if bMaxWidth < GlueDialogButton1:GetWidth() then
+		bMaxWidth = GlueDialogButton1:GetWidth();
+	end
 
 	-- Editbox setup
 	if ( dialogInfo.hasEditBox ) then
@@ -589,44 +598,140 @@ function GlueDialog_Show(which, text, data)
 		if ( dialogInfo.maxBytes ) then
 			GlueDialogEditBox:SetMaxBytes(dialogInfo.maxBytes);
 		end
+		if bMaxWidth < GlueDialogEditBox:GetWidth() then
+			bMaxWidth = GlueDialogEditBox:GetWidth();
+		end
 	else
 		GlueDialogEditBox:Hide();
 	end
+	--\
 
+	--/ Text & background formatting
 	-- size the width first
-	if( dialogInfo.displayVertical ) then
-		GlueDialogBackground:SetWidth(16 + GlueDialogButton1:GetWidth() + 16);
+	dWidth = bMaxWidth + dHBorderSpace*2;
+	if ( dialogInfo.displayVertical ) then
+		-- dWidth = bMaxWidth + dHBorderSpace*2;
 	elseif ( dialogInfo.button3 ) then
-		local displayWidth = 45 + GlueDialogButton1:GetWidth() + 8 + GlueDialogButton2:GetWidth() + 8 + GlueDialogButton3:GetWidth() + 45;
-		GlueDialogBackground:SetWidth(displayWidth);
-		GlueDialogText:SetWidth(displayWidth - 40);
+		dWidth = GlueDialogButton1:GetWidth() + GlueDialogButton2:GetWidth() + GlueDialogButton3:GetWidth() + bHSpace*2 + dHBorderSpace*2;
+	elseif ( dialogInfo.button2 ) then
+		dWidth = GlueDialogButton1:GetWidth() + GlueDialogButton2:GetWidth() + bHSpace + dHBorderSpace*2;
 	end
-
+	GlueDialogText:SetWidth( dWidth - 32 );
 	-- Get the height of the string
-	local textHeight, _;
 	if ( dialogInfo.html ) then
-		_,_,_,textHeight = GlueDialogHTML:GetBoundsRect();
+		_,_,textWidth,textHeight = GlueDialogHTML:GetBoundsRect();
 	else
 		textHeight = GlueDialogText:GetHeight();
+		textWidth = GlueDialogText:GetWidth();
+	end
+	-- check text form
+	if ( textWidth < textHeight * 3 ) then
+		if textHeight * 3 > 2 * GetScreenWidth() / 3 then
+			GlueDialogText:SetWidth( 2 * GetScreenWidth() / 3 );
+		else
+			GlueDialogText:SetWidth( textHeight * 3 );
+		end
+		-- recheck height
+		if ( dialogInfo.html ) then
+			_,_,textWidth,textHeight = GlueDialogHTML:GetBoundsRect();
+		else
+			textHeight = GlueDialogText:GetHeight();
+			textWidth = GlueDialogText:GetWidth();
+		end
+	end
+	GlueDialogBackground:SetWidth( textWidth + 32 );
+	-- Correct text width 4 alert
+	if ( dialogInfo.showAlert ) then
+		GlueDialogText:SetWidth( GlueDialogBackground:GetWidth() - GlueDialogAlertIcon:GetWidth() - 16 );
 	end
 
 	-- now size the dialog box height
 	if ( dialogInfo.hasEditBox ) then
-		GlueDialogBackground:SetHeight(16 + textHeight + 8 + GlueDialogEditBox:GetHeight() + 8 + GlueDialogButton1:GetHeight() + 16);
-	elseif( dialogInfo.displayVertical ) then
-		local displayHeight = 16 + textHeight + 8 + GlueDialogButton1:GetHeight() + 16;
+		dHeight = dVBorderSpace + textHeight + bVSpace + GlueDialogEditBox:GetHeight() + dVBorderSpace + GlueDialogButton1:GetHeight() + dVBorderSpace;
+	elseif ( dialogInfo.displayVertical ) then
+		dHeight = dVBorderSpace + textHeight + dVBorderSpace + GlueDialogButton1:GetHeight() + dVBorderSpace;
 		if ( dialogInfo.button2 ) then
-			displayHeight = displayHeight + 8 + GlueDialogButton2:GetHeight();
+			dHeight = dHeight + bVSpace + GlueDialogButton2:GetHeight();
 		end
 		if ( dialogInfo.button3 ) then
-			displayHeight = displayHeight + 8 + GlueDialogButton3:GetHeight();
+			dHeight = dHeight + bVSpace + GlueDialogButton3:GetHeight();
 		end
-		GlueDialogBackground:SetHeight(displayHeight);
 	else
-		GlueDialogBackground:SetHeight(16 + textHeight + 8 + GlueDialogButton1:GetHeight() + 16);
+		dHeight = dVBorderSpace + textHeight + dVBorderSpace + GlueDialogButton1:GetHeight() + dVBorderSpace;
 	end
-	
-	GlueDialog:Show();
+	GlueDialogBackground:SetHeight(dHeight);
+	--/
+
+	--/ Set Buttons & alert positions
+	-- Set positions of the dialog buttons
+	if ( dialogInfo.button3 ) then
+		GlueDialogButton2:Show();
+		GlueDialogButton3:Show();
+		if ( dialogInfo.displayVertical ) then
+			GlueDialogButton3:SetPoint("BOTTOM", "GlueDialogBackground", "BOTTOM", 0, dVBorderSpace);
+			GlueDialogButton2:SetPoint("BOTTOM", "GlueDialogButton3", "TOP", 0, bVSpace);
+			GlueDialogButton1:SetPoint("BOTTOM", "GlueDialogButton2", "TOP", 0, bVSpace);
+		else
+			dHBorderSpace = (GlueDialogBackground:GetWidth() - GlueDialogButton1:GetWidth() - GlueDialogButton2:GetWidth() - GlueDialogButton3:GetWidth() - bHSpace*2) / 2;
+			GlueDialogButton3:SetPoint("BOTTOMRIGHT", "GlueDialogBackground", "BOTTOMRIGHT", -dHBorderSpace, dVBorderSpace);
+			GlueDialogButton2:SetPoint("RIGHT", "GlueDialogButton3", "LEFT", -bHSpace, 0);
+			GlueDialogButton1:SetPoint("RIGHT", "GlueDialogButton2", "LEFT", -bHSpace, 0);
+		end
+	elseif ( dialogInfo.button2 ) then
+		GlueDialogButton2:Show();
+		GlueDialogButton3:Hide();
+
+		if ( dialogInfo.displayVertical ) then
+			GlueDialogButton2:SetPoint("BOTTOM", "GlueDialogBackground", "BOTTOM", 0, dVBorderSpace);
+			GlueDialogButton1:SetPoint("BOTTOM", "GlueDialogButton2", "TOP", 0, bVSpace);
+		else
+			dHBorderSpace = (GlueDialogBackground:GetWidth() - GlueDialogButton1:GetWidth() - GlueDialogButton2:GetWidth() - bHSpace) / 2;
+			GlueDialogButton2:SetPoint("BOTTOMRIGHT", "GlueDialogBackground", "BOTTOMRIGHT", -dHBorderSpace, dVBorderSpace);
+			GlueDialogButton1:SetPoint("RIGHT", "GlueDialogButton2", "LEFT", -bHSpace, 0);
+		end
+	else
+		GlueDialogButton1:SetPoint("BOTTOM", "GlueDialogBackground", "BOTTOM", 0, dVBorderSpace);
+		GlueDialogButton2:Hide();
+		GlueDialogButton3:Hide();
+	end
+
+	-- Show or hide the alert icon
+	-- GlueDialogAlertIcon:SetPoint("TOPLEFT", "GlueDialogBackground", "TOPLEFT", 16, ( -textHeight + GlueDialogAlertIcon:GetHeight()) / 2 - 16);
+	if ( dialogInfo.showAlert ) then
+		GlueDialogText:SetPoint("TOPRIGHT", "GlueDialogBackground", "TOPRIGHT", -16, -16);
+		GlueDialogAlertIcon:Show();
+		GlueDialogAlertIcon:SetPoint("TOPLEFT", "GlueDialogBackground", "TOPLEFT", 16, ( -textHeight + GlueDialogAlertIcon:GetHeight()) / 2 - 16);
+	else
+		GlueDialogText:SetPoint("TOP", "GlueDialogBackground", "TOP", 0, -16);
+		GlueDialogAlertIcon:Hide();
+	end
+
+	GlueFrameFadeIn(GlueDialog, VX_FADE_REFRESH, GlueDialog:Show());
+
+	if AccountLoginForceLogin:GetChecked() and which then
+		if which == "OKAY" and text then
+			if text == LOGIN_SERVER_DOWN then
+				StatusDialogClick();
+				AccountLogin_Login();
+			end
+		elseif which == "CONNECTION_HELP" and text then
+			if text == LOGIN_SERVER_DOWN then
+				AccountLogin_Login();
+			end
+		elseif which == "CONNECTION_HELP_HTML" and vx_HTMLText == LOGIN_FAILED then
+			AccountLogin_Login();
+		elseif which == "CANCEL" and text then
+			if text == RESPONSE_CONNECTED then
+				SetCVar("Sound_EnableSoundWhenGameIsInBG", 1);
+				PlaySound("gsLogin");
+			end
+		elseif VX_SOUNDBG and which ~= "CANCEL" then
+			SetCVar("Sound_EnableSoundWhenGameIsInBG", 1);
+		end
+	elseif VX_SOUNDBG then
+		SetCVar("Sound_EnableSoundWhenGameIsInBG", VX_SOUNDBG);
+		VX_SOUNDBG = nil;
+	end
 end
 
 function GlueDialog_OnLoad(self)
@@ -635,7 +740,8 @@ function GlueDialog_OnLoad(self)
 	self:RegisterEvent("CLOSE_STATUS_DIALOG");
 	GlueDialogText.origWidth = GlueDialogText:GetWidth();
 	GlueDialogBackground.origWidth = GlueDialogBackground:GetWidth();
-	GlueDialogBackground.alertWidth = 600;
+	GlueDialogBackground.alertWidth = 64;
+	hooksecurefunc(GlueDialogHTML, "SetText", function(self, txt) vx_HTMLText = txt end);
 end
 
 function GlueDialog_OnShow(self)
@@ -648,15 +754,15 @@ end
 function GlueDialog_OnUpdate(self, elapsed)
 	for i=1, MAX_NUM_GLUE_DIALOG_BUTTONS do
 		button = _G[ "GlueDialogButton"..i ];
-		if ( button and (CURRENT_GLUE_SCREEN == "login") or (CURRENT_GLUE_SCREEN == "realmwizard") or CURRENT_GLUE_SCREEN == "movie" ) then
-			button:SetNormalTexture("Interface\\Glues\\Common\\Glue-Panel-Button-Up-Blue");
-			button:SetPushedTexture("Interface\\Glues\\Common\\Glue-Panel-Button-Down-Blue");
-			button:SetHighlightTexture("Interface\\Glues\\Common\\Glue-Panel-Button-Highlight-Blue");
-		else
-			button:SetNormalTexture("Interface\\Glues\\Common\\Glue-Panel-Button-Up");
-			button:SetPushedTexture("Interface\\Glues\\Common\\Glue-Panel-Button-Down");
-			button:SetHighlightTexture("Interface\\Glues\\Common\\Glue-Panel-Button-Highlight");
-		end
+		--if ( button and (CURRENT_GLUE_SCREEN == "login") or (CURRENT_GLUE_SCREEN == "realmwizard") or CURRENT_GLUE_SCREEN == "movie" ) then
+		--	button:SetNormalTexture("Interface\\Glues\\Common\\Glue-Panel-Button-Up-Blue");
+		--	button:SetPushedTexture("Interface\\Glues\\Common\\Glue-Panel-Button-Down-Blue");
+		--	button:SetHighlightTexture("Interface\\Glues\\Common\\Glue-Panel-Button-Highlight-Blue");
+		--else
+		--	button:SetNormalTexture("Interface\\Glues\\Common\\Glue-Panel-Button-Up");
+		--	button:SetPushedTexture("Interface\\Glues\\Common\\Glue-Panel-Button-Down");
+		--	button:SetHighlightTexture("Interface\\Glues\\Common\\Glue-Panel-Button-Highlight");
+		--end
 	end
 end
 
@@ -675,17 +781,20 @@ function GlueDialog_OnEvent(self, event, arg1, arg2, arg3)
 			GlueDialogButton1:SetText(buttonText);
 		end
 		GlueDialogBackground:SetHeight(32 + GlueDialogText:GetHeight() + 8 + GlueDialogButton1:GetHeight() + 16);
+		-- GlueDialogBackground:SetWidth(GlueDialogText:GetWidth()+32)
 	elseif ( event == "CLOSE_STATUS_DIALOG" ) then
-		GlueDialog:Hide();
+		GlueFrameFadeOut(GlueDialog, VX_FADE_REFRESH, "HIDE");
+		--GlueDialog:Hide();
 	end
 end
 
 function GlueDialog_OnHide()
+	GlueFrameFadeOut(GlueDialog, VX_FADE_REFRESH, "HIDE");
 --	PlaySound("igMainMenuClose");
 end
 
 function GlueDialog_OnClick(index)
-	GlueDialog:Hide();
+	--GlueDialog:Hide();
 	if ( index == 1 ) then
 		local OnAccept = GlueDialogTypes[GlueDialog.which].OnAccept;
 		if ( OnAccept ) then
@@ -694,6 +803,7 @@ function GlueDialog_OnClick(index)
 	elseif ( index == 2 ) then
 		local OnCancel = GlueDialogTypes[GlueDialog.which].OnCancel;
 		if ( OnCancel ) then
+			--GlueFrameFadeIn(GlueDialog, 0.55, OnCancel());
 			OnCancel();
 		end
 	elseif ( index == 3 ) then
@@ -702,6 +812,7 @@ function GlueDialog_OnClick(index)
 			OnAlt();
 		end
 	end
+	GlueFrameFadeOut(GlueDialog, VX_FADE_REFRESH, "HIDE");
 	PlaySound("gsTitleOptionOK");
 end
 
@@ -720,7 +831,8 @@ function GlueDialog_OnKeyDown(key)
 		if ( info.hideSound ) then
 			PlaySound(info.hideSound);
 		end
-		GlueDialog:Hide();
+		GlueFrameFadeOut(GlueDialog, VX_FADE_REFRESH, "HIDE");
+		--GlueDialog:Hide();
 	elseif ( key == "ESCAPE" ) then
 		if ( GlueDialogButton2:IsShown() ) then
 			GlueDialogButton2:Click();

@@ -1,20 +1,38 @@
 <Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/
 ..\FrameXML\UI.xsd">
 	<Script file="GlueDialog.lua"/>
-	<Button name="GlueDialogButtonTemplate" virtual="true">
+	<Button name="GlueDialogButtonTemplate" inherits="GlueButtonMasterTemplate" virtual="true">
 		<Size>
-			<AbsDimension x="220" y="40"/>
+			<AbsDimension x="256" y="64"/>
 		</Size>
+		<Layers>
+			<Layer level="BACKGROUND">
+				<Texture name="$parentRays" file="Interface\Glues\Common\Glues-BigButton-Rays" alphaMode="ADD" setAllPoints="true" hidden="true">
+					<TexCoords left="0.14453125" right="0.85546875" top="0" bottom="1"/>
+					<Size>
+						<AbsDimension x="256" y="64"/>
+					</Size>
+				</Texture>
+			</Layer>
+			<Layer level="ARTWORK">
+				<Texture name="$parentGlow" file="Interface\Glues\Common\Glues-BigButton-Glow" setAllPoints="true" alphaMode="ADD">
+					<TexCoords left="0.14453125" right="0.85546875" top="0" bottom="1"/>
+					<Size>
+						<AbsDimension x="256" y="64"/>
+					</Size>
+				</Texture>
+			</Layer>
+		</Layers>
 		<Scripts>
 			<OnClick>
 				GlueDialog_OnClick(self:GetID());
 			</OnClick>
 		</Scripts>
-		<ButtonText>
+		<ButtonText name="$parentText">
 			<Anchors>
 				<Anchor point="CENTER">
 					<Offset>
-						<AbsDimension x="0" y="2"/>
+						<AbsDimension x="0" y="0"/>
 					</Offset>
 				</Anchor>
 			</Anchors>
@@ -65,14 +83,14 @@
 								</Anchor>
 							</Anchors>
 						</FontString>
-						<Texture name="GlueDialogAlertIcon" file="Interface\DialogFrame\UI-Dialog-Icon-AlertNew" hidden="true">
+						<Texture name="GlueDialogAlertIcon" file="Interface\DialogFrame\DialogAlertIcon" hidden="true">
 							<Size>
-								<AbsDimension x="48" y="48"/>
+								<AbsDimension x="64" y="64"/>
 							</Size>
 							<Anchors>
-								<Anchor point="LEFT">
+								<Anchor point="TOPLEFT">
 									<Offset>
-										<AbsDimension x="24" y="0"/>
+										<AbsDimension x="0" y="0"/>
 									</Offset>
 								</Anchor>
 							</Anchors>

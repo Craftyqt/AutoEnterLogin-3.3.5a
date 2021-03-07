@@ -256,7 +256,8 @@ function RealmList_OnKeyDown(key)
 end
 
 function RealmList_OnOk()
-	RealmList:Hide();
+	--RealmList:Hide();
+	GlueFrameFadeOut(RealmList, VX_FADE_REFRESH, "HIDE");
 	-- If trying to join a Full realm then popup a dialog
 	if ( RealmList.showRealmIsFullDialog ) then
 		GlueDialog_Show("REALM_IS_FULL");
@@ -268,7 +269,8 @@ function RealmList_OnOk()
 end
 
 function RealmList_OnCancel()
-	RealmList:Hide();
+	--RealmList:Hide();
+	GlueFrameFadeOut(RealmList, VX_FADE_REFRESH, "HIDE");
 	RealmListDialogCancelled();
 	local serverName, isPVP, isRP, isDown = GetServerName();
 
@@ -309,6 +311,7 @@ function RealmListScrollFrame_OnVerticalScroll(self, offset)
 end
 
 function RealmList_OnShow(self)
+	GlueFrameFadeIn(RealmList, VX_FADE_REFRESH);
 	RealmListUpdate();
 	self.refreshTime = RealmListUpdateRate();
 	local selectedCategory = GetSelectedCategory();

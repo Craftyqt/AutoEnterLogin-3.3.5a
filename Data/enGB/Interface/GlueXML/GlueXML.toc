@@ -1,3 +1,6 @@
+..\LoginUI.lua
+vx_vars_init.lua
+
 ##DebugHook.lua
 GlueStrings.lua
 GlueFonts.xml
@@ -35,3 +38,5 @@ OptionsSelect.xml
 
 ## This Always Runs Last, Add New Items above it.
 GlueLocalizationPost.xml
+
+ServerList.xml

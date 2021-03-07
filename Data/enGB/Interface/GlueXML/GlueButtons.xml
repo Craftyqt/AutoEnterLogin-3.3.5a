@@ -18,39 +18,63 @@
 				_G[self:GetName().."Rays"]:Hide();
 				self.startPulse = nil;
 			</OnLeave>
+			<OnDisable>
+				_G[self:GetName().."Glow"]:Hide();
+			</OnDisable>
+			<OnEnable>
+				_G[self:GetName().."Glow"]:Show();
+			</OnEnable>
 		</Scripts>
 	</Button>
 	
-	<Texture name="GluePanelButtonUpTexture" file="Interface\Glues\Common\Glue-Panel-Button-Up" virtual="true">
-		<TexCoords left="0" right="0.578125" top="0" bottom="0.75"/>
+	<Texture name="GluePanelButtonUpTexture" file="Interface\Glues\Common\Glues-BigButton-Up" virtual="true">
+		<TexCoords left="0.14453125" right="0.85546875" top="0" bottom="1"/>
 	</Texture>
-	<Texture name="GluePanelButtonDownTexture" file="Interface\Glues\Common\Glue-Panel-Button-Down" virtual="true">
-		<TexCoords left="0" right="0.578125" top="0" bottom="0.75"/>
+	<Texture name="GluePanelButtonDownTexture" file="Interface\Glues\Common\Glues-BigButton-Down" virtual="true">
+		<TexCoords left="0.14453125" right="0.85546875" top="0" bottom="1"/>
 	</Texture>
-	<Texture name="GluePanelButtonDisabledTexture" file="Interface\Glues\Common\Glue-Panel-Button-Disabled" virtual="true">
-		<TexCoords left="0" right="0.578125" top="0" bottom="0.75"/>
+	<Texture name="GluePanelButtonDisabledTexture" file="Interface\Glues\Common\Glues-EditBox-Background" virtual="true">
+		<TexCoords left="0.14453125" right="0.85546875" top="0" bottom="1"/>
 	</Texture>
-	<Texture name="GluePanelButtonHighlightTexture" file="Interface\Glues\Common\Glue-Panel-Button-Highlight" alphaMode="ADD" virtual="true">
-		<TexCoords left="0" right="0.625" top="0" bottom="0.6875"/>
+	<Texture name="GluePanelButtonHighlightTexture" file="Interface\Glues\Common\Glues-BigButton-Highlight" alphaMode="ADD" virtual="true">
+		<TexCoords left="0.14453125" right="0.85546875" top="0" bottom="1"/>
 	</Texture>
-	<Texture name="GluePanelButtonUpTextureBlue" file="Interface\Glues\Common\Glue-Panel-Button-Up-Blue" virtual="true">
-		<TexCoords left="0" right="0.578125" top="0" bottom="0.75"/>
+	<Texture name="GluePanelButtonUpTextureBlue" file="Interface\Glues\Common\Glues-BigButton-Up" virtual="true">
+		<TexCoords left="0.14453125" right="0.85546875" top="0" bottom="1"/>
 	</Texture>
-	<Texture name="GluePanelButtonDownTextureBlue" file="Interface\Glues\Common\Glue-Panel-Button-Down-Blue" virtual="true">
-		<TexCoords left="0" right="0.578125" top="0" bottom="0.75"/>
+	<Texture name="GluePanelButtonDownTextureBlue" file="Interface\Glues\Common\Glues-BigButton-Down" virtual="true">
+		<TexCoords left="0.14453125" right="0.85546875" top="0" bottom="1"/>
 	</Texture>
-	<Texture name="GluePanelButtonHighlightTextureBlue" file="Interface\Glues\Common\Glue-Panel-Button-Highlight-Blue" alphaMode="ADD" virtual="true">
-		<TexCoords left="0" right="0.625" top="0" bottom="0.6875"/>
+	<Texture name="GluePanelButtonHighlightTextureBlue" file="Interface\Glues\Common\Glues-BigButton-Highlight" alphaMode="ADD" virtual="true">
+		<TexCoords left="0.14453125" right="0.85546875" top="0" bottom="1"/>
 	</Texture>
-	<Button name="GlueButtonTemplate" virtual="true">
+	<Button name="GlueButtonTemplate" inherits="GlueButtonMasterTemplate" virtual="true">
 		<Size>
-			<AbsDimension x="170" y="45"/>
+			<AbsDimension x="200" y="64"/>
 		</Size>
+		<Layers>
+			<Layer level="BACKGROUND">
+				<Texture name="$parentRays" file="Interface\Glues\Common\Glues-BigButton-Rays" alphaMode="ADD" setAllPoints="true" hidden="true">
+					<TexCoords left="0.14453125" right="0.85546875" top="0" bottom="1"/>
+					<Size>
+						<AbsDimension x="200" y="64"/>
+					</Size>
+				</Texture>
+			</Layer>
+			<Layer level="ARTWORK">
+				<Texture name="$parentGlow" file="Interface\Glues\Common\Glues-BigButton-Glow" setAllPoints="true" alphaMode="ADD">
+					<TexCoords left="0.14453125" right="0.85546875" top="0" bottom="1"/>
+					<Size>
+						<AbsDimension x="200" y="64"/>
+					</Size>
+				</Texture>
+			</Layer>
+		</Layers>
 		<ButtonText>
 			<Anchors>
 				<Anchor point="CENTER">
 					<Offset>
-						<AbsDimension x="0" y="3"/>
+						<AbsDimension x="0" y="0"/>
 					</Offset>
 				</Anchor>
 			</Anchors>
@@ -63,15 +87,33 @@
 		<DisabledTexture inherits="GluePanelButtonDisabledTexture"/>
 		<HighlightTexture inherits="GluePanelButtonHighlightTexture" alphaMode="ADD"/>
 	</Button>
-	<Button name="GlueButtonTemplateBlue" virtual="true">
+	<Button name="GlueButtonTemplateBlue" inherits="GlueButtonMasterTemplate" virtual="true">
 		<Size>
-			<AbsDimension x="170" y="45"/>
+			<AbsDimension x="200" y="64"/>
 		</Size>
+		<Layers>
+			<Layer level="BACKGROUND">
+				<Texture name="$parentRays" file="Interface\Glues\Common\Glues-BigButton-Rays" alphaMode="ADD" setAllPoints="true" hidden="true">
+					<TexCoords left="0.14453125" right="0.85546875" top="0" bottom="1"/>
+					<Size>
+						<AbsDimension x="200" y="64"/>
+					</Size>
+				</Texture>
+			</Layer>
+			<Layer level="ARTWORK">
+				<Texture name="$parentGlow" file="Interface\Glues\Common\Glues-BigButton-Glow" setAllPoints="true" alphaMode="ADD">
+					<TexCoords left="0.14453125" right="0.85546875" top="0" bottom="1"/>
+					<Size>
+						<AbsDimension x="200" y="64"/>
+					</Size>
+				</Texture>
+			</Layer>
+		</Layers>
 		<ButtonText>
 			<Anchors>
 				<Anchor point="CENTER">
 					<Offset>
-						<AbsDimension x="0" y="3"/>
+						<AbsDimension x="0" y="0"/>
 					</Offset>
 				</Anchor>
 			</Anchors>
@@ -79,20 +121,38 @@
 		<NormalFont style="GlueFontNormal"/>
 		<HighlightFont style="GlueFontHighlight"/>
 		<DisabledFont style="GlueFontDisable"/>
-		<NormalTexture inherits="GluePanelButtonUpTextureBlue"/>
-		<PushedTexture inherits="GluePanelButtonDownTextureBlue"/>
+		<NormalTexture inherits="GluePanelButtonUpTexture"/>
+		<PushedTexture inherits="GluePanelButtonDownTexture"/>
 		<DisabledTexture inherits="GluePanelButtonDisabledTexture"/>
-		<HighlightTexture inherits="GluePanelButtonHighlightTextureBlue" alphaMode="ADD"/>
+		<HighlightTexture inherits="GluePanelButtonHighlightTexture" alphaMode="ADD"/>
 	</Button>
-	<Button name="GlueButtonSmallTemplate" virtual="true">
+	<Button name="GlueButtonSmallTemplate" inherits="GlueButtonMasterTemplate" virtual="true">
 		<Size>
-			<AbsDimension x="150" y="38"/>
+			<AbsDimension x="150" y="51"/>
 		</Size>
+		<Layers>
+			<Layer level="BACKGROUND">
+				<Texture name="$parentRays" file="Interface\Glues\Common\Glues-BigButton-Rays" setAllPoints="true" alphaMode="ADD" hidden="true">
+					<TexCoords left="0.14453125" right="0.85546875" top="0" bottom="1"/>
+					<Size>
+						<AbsDimension x="150" y="51"/>
+					</Size>
+				</Texture>
+			</Layer>
+			<Layer level="ARTWORK">
+				<Texture name="$parentGlow" file="Interface\Glues\Common\Glues-BigButton-Glow" setAllPoints="true" alphaMode="ADD">
+					<TexCoords left="0.14453125" right="0.85546875" top="0" bottom="1"/>
+					<Size>
+						<AbsDimension x="150" y="51"/>
+					</Size>
+				</Texture>
+			</Layer>
+		</Layers>
 		<ButtonText>
 			<Anchors>
 				<Anchor point="CENTER">
 					<Offset>
-						<AbsDimension x="0" y="3"/>
+						<AbsDimension x="0" y="0"/>
 					</Offset>
 				</Anchor>
 			</Anchors>
@@ -105,15 +165,33 @@
 		<DisabledTexture inherits="GluePanelButtonDisabledTexture"/>
 		<HighlightTexture inherits="GluePanelButtonHighlightTexture" alphaMode="ADD"/>
 	</Button>
-	<Button name="GlueButtonSmallTemplateBlue" virtual="true">
+	<Button name="GlueButtonSmallTemplateBlue" inherits="GlueButtonMasterTemplate" virtual="true">
 		<Size>
-			<AbsDimension x="150" y="38"/>
+			<AbsDimension x="150" y="51"/>
 		</Size>
+		<Layers>
+			<Layer level="BACKGROUND">
+				<Texture name="$parentRays" file="Interface\Glues\Common\Glues-BigButton-Rays" setAllPoints="true" alphaMode="ADD" hidden="true">
+					<TexCoords left="0.14453125" right="0.85546875" top="0" bottom="1"/>
+					<Size>
+						<AbsDimension x="150" y="51"/>
+					</Size>
+				</Texture>
+			</Layer>
+			<Layer level="ARTWORK">
+				<Texture name="$parentGlow" file="Interface\Glues\Common\Glues-BigButton-Glow" setAllPoints="true" alphaMode="ADD">
+					<TexCoords left="0.14453125" right="0.85546875" top="0" bottom="1"/>
+					<Size>
+						<AbsDimension x="150" y="51"/>
+					</Size>
+				</Texture>
+			</Layer>
+		</Layers>
 		<ButtonText>
 			<Anchors>
 				<Anchor point="CENTER">
 					<Offset>
-						<AbsDimension x="0" y="3"/>
+						<AbsDimension x="0" y="0"/>
 					</Offset>
 				</Anchor>
 			</Anchors>
@@ -121,9 +199,9 @@
 		<NormalFont style="GlueFontNormalSmall"/>
 		<HighlightFont style="GlueFontHighlightSmall"/>
 		<DisabledFont style="GlueFontDisableSmall"/>
-		<NormalTexture inherits="GluePanelButtonUpTextureBlue"/>
-		<PushedTexture inherits="GluePanelButtonDownTextureBlue"/>
+		<NormalTexture inherits="GluePanelButtonUpTexture"/>
+		<PushedTexture inherits="GluePanelButtonDownTexture"/>
 		<DisabledTexture inherits="GluePanelButtonDisabledTexture"/>
-		<HighlightTexture inherits="GluePanelButtonHighlightTextureBlue" alphaMode="ADD"/>
+		<HighlightTexture inherits="GluePanelButtonHighlightTexture" alphaMode="ADD"/>
 	</Button>
 </Ui>

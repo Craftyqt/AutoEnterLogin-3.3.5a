@@ -73,6 +73,7 @@ function CharacterCreate_OnLoad(self)
 	CharacterCreate.selectedGender = 0;
 
 	SetCharCustomizeFrame("CharacterCreate");
+	--CharCreateModel:SetLight(1, 0, 0, -0.707, -0.707, 0.7, 1.0, 1.0, 1.0, 0.8, 1.0, 1.0, 0.8);
 
 	for i=1, NUM_CHAR_CUSTOMIZATIONS, 1 do
 		_G["CharacterCustomizationButtonFrame"..i.."Text"]:SetText(_G["CHAR_CUSTOMIZATION"..i.."_DESC"]);
@@ -124,6 +125,8 @@ function CharacterCreate_OnShow()
 		CharacterCreateRandomName:Show();
 	end
 	
+	GlueFrameFadeIn(CharacterCreate, VX_FADE_LOAD);
+
 	-- setup customization
 	CharacterChangeFixup();
 end
@@ -291,6 +294,7 @@ function SetCharacterRace(id)
 
 	local backgroundFilename = GetCreateBackgroundModel();
 	SetBackgroundModel(CharacterCreate, backgroundFilename);
+	GlueFrameFadeIn(CharacterCreate, VX_FADE_REFRESH);
 end
 
 function SetCharacterClass(id)
@@ -351,6 +355,11 @@ end
 
 function CharacterCreate_Back()
 	PlaySound("gsCharacterCreationCancel");
+	GlueFrameFadeOut(CharacterCreate, VX_FADE_UNLOAD, CharacterCreate_Back_Wait);
+	--SetGlueScreen("charselect");
+end
+
+function CharacterCreate_Back_Wait()
 	SetGlueScreen("charselect");
 end
 
@@ -358,19 +367,20 @@ function CharacterClass_OnClick(id)
 	PlaySound("gsCharacterCreationClass");
 	local _,_,currClass = GetSelectedClass();
 	if ( currClass ~= id and IsRaceClassValid(GetSelectedRace(), id) ) then
-		SetSelectedClass(id);
-		SetCharacterClass(id);
-	 	SetCharacterRace(GetSelectedRace());
-		CharacterChangeFixup();
+		CharacterCreate.id = id;
+		GlueFrameFadeOut(CharacterCreate, VX_FADE_REFRESH, CharacterCreateFadeInClass);
 	end
 end
 
-function CharacterRace_OnClick(self, id)
-	PlaySound("gsCharacterCreationClass");
-	if ( not self:GetChecked() ) then
-		self:SetChecked(1);
-		return;
-	end
+function CharacterCreateFadeInClass()
+	SetSelectedClass(CharacterCreate.id);
+	SetCharacterClass(CharacterCreate.id);
+ 	SetCharacterRace(GetSelectedRace());
+	CharacterChangeFixup();
+	CharacterCreate.id = nil;
+end
+
+function CharacterRace_OnWait(self, id)
 	if ( GetSelectedRace() ~= id ) then
 		SetSelectedRace(id);
 		SetCharacterRace(id);
@@ -390,7 +400,32 @@ function CharacterRace_OnClick(self, id)
 	end
 end
 
+function CharacterCreateFadeInRace()
+	CharacterRace_OnWait(CharacterCreate.tg, CharacterCreate.tgId);
+	CharacterCreate.tg = nil;
+	CharacterCreate.tgId = nil;
+end
+
+function CharacterRace_OnClick(self, id)
+	CharacterCreate.tg = self;
+	CharacterCreate.tgId = id;
+
+	PlaySound("gsCharacterCreationClass");
+	if ( not self:GetChecked() ) then
+		self:SetChecked(1);
+		return;
+	end
+	GlueFrameFadeOut(CharacterCreate, VX_FADE_REFRESH, CharacterCreateFadeInRace);
+end
+
 function SetCharacterGender(sex)
+	CharacterCreate.sex = sex;
+	GlueFrameFadeOut(CharacterCreate, VX_FADE_REFRESH, SetCharacterGender_Wait);
+end
+
+function SetCharacterGender_Wait()
+	sex = CharacterCreate.sex;
+	CharacterCreate.sex = nil;
 	local gender;
 	SetSelectedSex(sex);
 	if ( sex == SEX_MALE ) then
@@ -499,25 +534,6 @@ function GetFlavorText(tagname, sex)
 		text = _G[tagname..secondary];
 	end
 	return text;
-end
-
-function CharacterCreate_DeathKnightSwap(self)
-	local _, classFilename = GetSelectedClass();
-	if ( classFilename == "DEATHKNIGHT" ) then
-		if (self.currentModel ~= "DEATHKNIGHT") then
-			self.currentModel = "DEATHKNIGHT";
-			self:SetNormalTexture("Interface\\Glues\\Common\\Glue-Panel-Button-Up-Blue");
-			self:SetPushedTexture("Interface\\Glues\\Common\\Glue-Panel-Button-Down-Blue");
-			self:SetHighlightTexture("Interface\\Glues\\Common\\Glue-Panel-Button-Highlight-Blue");
-		end
-	else
-		if (self.currentModel == "DEATHKNIGHT") then
-			self.currentModel = nil;
-			self:SetNormalTexture("Interface\\Glues\\Common\\Glue-Panel-Button-Up");
-			self:SetPushedTexture("Interface\\Glues\\Common\\Glue-Panel-Button-Down");
-			self:SetHighlightTexture("Interface\\Glues\\Common\\Glue-Panel-Button-Highlight");
-		end
-	end
 end
 
 function CharacterChangeFixup()

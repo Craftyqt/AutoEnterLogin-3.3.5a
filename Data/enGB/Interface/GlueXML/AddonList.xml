@@ -652,14 +652,14 @@
 							</Frame>
 						</ScrollChild>
 					</ScrollFrame>
-					<Button name="AddonListDisableAllButton" inherits="AddonListButtonTemplate" text="DISABLE_ALL_ADDONS">
+					<Button name="AddonListDisableAllButton" inherits="GlueDialogButtonTemplate" text="DISABLE_ALL_ADDONS">
 						<Size>
-							<AbsDimension x="160" y="35"/>
+							<AbsDimension x="150" y="48"/>
 						</Size>
 						<Anchors>
 							<Anchor point="BOTTOMLEFT">
 								<Offset>
-									<AbsDimension x="16" y="13"/>
+									<AbsDimension x="7" y="7"/>
 								</Offset>
 							</Anchor>
 						</Anchors>
@@ -674,14 +674,14 @@
 							</OnClick>
 						</Scripts>
 					</Button>
-					<Button name="AddonListEnableAllButton" inherits="AddonListButtonTemplate" text="ENABLE_ALL_ADDONS">
+					<Button name="AddonListEnableAllButton" inherits="GlueDialogButtonTemplate" text="ENABLE_ALL_ADDONS">
 						<Size>
-							<AbsDimension x="160" y="35"/>
+							<AbsDimension x="150" y="48"/>
 						</Size>
 						<Anchors>
 							<Anchor point="LEFT" relativeTo="AddonListDisableAllButton" relativePoint="RIGHT">
 								<Offset>
-									<AbsDimension x="0" y="0"/>
+									<AbsDimension x="-10" y="0"/>
 								</Offset>
 							</Anchor>
 						</Anchors>
@@ -698,12 +698,12 @@
 					</Button>
 					<Button name="AddonListCancelButton" inherits="GlueDialogButtonTemplate" text="CANCEL">
 						<Size>
-							<AbsDimension x="125" y="35"/>
+							<AbsDimension x="150" y="48"/>
 						</Size>
 						<Anchors>
 							<Anchor point="BOTTOMRIGHT">
 								<Offset>
-									<AbsDimension x="-46" y="13"/>
+									<AbsDimension x="-46" y="7"/>
 								</Offset>
 							</Anchor>
 						</Anchors>
@@ -715,12 +715,12 @@
 					</Button>
 					<Button name="AddonListOkButton" inherits="GlueDialogButtonTemplate" text="OKAY">
 						<Size>
-							<AbsDimension x="125" y="35"/>
+							<AbsDimension x="150" y="48"/>
 						</Size>
 						<Anchors>
 							<Anchor point="RIGHT" relativeTo="AddonListCancelButton" relativePoint="LEFT">
 								<Offset>
-									<AbsDimension x="8" y="0"/>
+									<AbsDimension x="10" y="0"/>
 								</Offset>
 							</Anchor>
 						</Anchors>

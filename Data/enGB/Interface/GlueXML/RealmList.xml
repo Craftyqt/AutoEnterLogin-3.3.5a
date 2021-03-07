@@ -478,7 +478,7 @@
 						</Anchors>
 						<Scripts>
 							<OnClick>
-								RealmList:Hide();
+								GlueFrameFadeOut(RealmList, VX_FADE_REFRESH, "HIDE");
 							</OnClick>
 						</Scripts>
 					</Button>
@@ -731,12 +731,12 @@
 					</ScrollFrame>
 					<Button name="RealmListCancelButton" inherits="GlueDialogButtonTemplate" text="CANCEL">
 						<Size>
-							<AbsDimension x="125" y="35"/>
+							<AbsDimension x="150" y="48"/>
 						</Size>
 						<Anchors>
 							<Anchor point="BOTTOMRIGHT">
 								<Offset>
-									<AbsDimension x="-46" y="13"/>
+									<AbsDimension x="-46" y="7"/>
 								</Offset>
 							</Anchor>
 						</Anchors>
@@ -749,12 +749,12 @@
 					</Button>
 					<Button name="RealmListOkButton" inherits="GlueDialogButtonTemplate" text="OKAY">
 						<Size>
-							<AbsDimension x="125" y="35"/>
+							<AbsDimension x="150" y="48"/>
 						</Size>
 						<Anchors>
 							<Anchor point="RIGHT" relativeTo="RealmListCancelButton" relativePoint="LEFT">
 								<Offset>
-									<AbsDimension x="8" y="0"/>
+									<AbsDimension x="0" y="0"/>
 								</Offset>
 							</Anchor>
 						</Anchors>

@@ -49,7 +49,45 @@
 				</Layers>
 			</Frame>
 		</Frames>
+		<Layers>
+			<Layer level="ARTWORK">
+				<Texture name="$parentOnMouse" file="Interface\QuestFrame\UI-QuestItemHighlight" hidden="true">
+					<TexCoords left="0.19140625" right="0.59375" top="0.109375" bottom="0.703125"/>
+					<Size>
+						<AbsDimension x="233" y="53"/>
+					</Size>
+					<Anchors>
+						<Anchor point="TOPLEFT">
+							<Offset>
+								<AbsDimension x="-8" y="-1"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</Texture>
+			</Layer>
+			<Layer level="ARTWORK">
+				<Texture name="$parentOnSelect" file="Interface\Glues\CharacterSelect\Glue-CharacterSelect-Highlight" alphaMode="ADD" hidden="true">
+					<Size>
+						<AbsDimension x="256" y="74"/>
+					</Size>
+					<Anchors>
+						<Anchor point="TOPLEFT">
+							<Offset>
+								<AbsDimension x="-20" y="8"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</Texture>
+			</Layer>
+
+		</Layers>
 		<Scripts>
+			<OnEnter>
+				_G[self:GetName().."OnMouse"]:Show();
+			</OnEnter>
+			<OnLeave>
+				_G[self:GetName().."OnMouse"]:Hide();
+			</OnLeave>
 			<OnClick>
 				CharacterSelectButton_OnClick(self);
 			</OnClick>
@@ -57,18 +95,6 @@
 				CharacterSelectButton_OnDoubleClick(self);
 			</OnDoubleClick>
 		</Scripts>
-		<HighlightTexture file="Interface\Glues\CharacterSelect\Glue-CharacterSelect-Highlight" alphaMode="ADD">
-			<Size>
-				<AbsDimension x="256" y="74"/>
-			</Size>
-			<Anchors>
-				<Anchor point="TOPLEFT">
-					<Offset>
-						<AbsDimension x="-20" y="8"/>
-					</Offset>
-				</Anchor>
-			</Anchors>
-		</HighlightTexture>
 		<NormalFont style="GlueFontNormal"/>
 		<HighlightFont style="GlueFontHighlight"/>
 	</Button>
@@ -152,6 +178,27 @@
 	</Button>
 	<ModelFFX name="CharacterSelect" toplevel="true" parent="GlueParent" setAllPoints="true" enableKeyboard="true" hidden="true">
 		<Frames>
+			<Frame name="BGCharacterSelectFrame" setAllPoints="true">
+				<Layers>
+					<Layer level="BACKGROUND">
+						<Texture name="VXBGTextureCS" file="Interface\Glues\LoadingScreens\LoadScreenRubySanctum">
+							<Anchors>
+								<Anchor point="BOTTOMLEFT">
+									<Offset>
+										<AbsDimension x="0" y="0"/>
+									</Offset>
+								</Anchor>
+								<Anchor point="TOPRIGHT">
+									<Offset>
+										<AbsDimension x="0" y="0"/>
+									</Offset>
+								</Anchor>
+							</Anchors>
+						</Texture>
+					</Layer>
+				</Layers>
+			</Frame>
+
 			<Frame name="CharacterSelectUI" setAllPoints="true" enableMouse="true">
 				<Layers>
 					<Layer level="ARTWORK">
@@ -159,7 +206,7 @@
 							<Anchors>
 								<Anchor point="BOTTOM">
 									<Offset>
-										<AbsDimension x="0" y="100"/>
+										<AbsDimension x="0" y="80"/>
 									</Offset>
 								</Anchor>
 							</Anchors>
@@ -173,7 +220,7 @@
 							<Anchors>
 								<Anchor point="TOPLEFT">
 									<Offset>
-										<AbsDimension x="3" y="-7"/>
+										<AbsDimension x="-5" y="0"/>
 									</Offset>
 								</Anchor>
 							</Anchors>
@@ -181,14 +228,47 @@
 					</Layer>
 				</Layers>
 				<Frames>
+
+					<Button name="CharSelectTestButton" inherits="GlueButtonTemplate" text="Test" hidden="true">
+						<Size x="64" y="64"/>
+						<Anchors>
+							<Anchor point="TOP">
+								<Offset>
+									<AbsDimension x="0" y="-150"/>
+								</Offset>
+							</Anchor>
+						</Anchors>
+						<Layers>
+							<Layer level="BACKGROUND">
+								<FontString name="CharSelectTestText" inherits="GlueFontNormal" justifyH="LEFT">
+									<Size>
+										<AbsDimension x="600" y="100"/>
+									</Size>
+									<Anchors>
+										<Anchor point="TOPLEFT" relativePoint="TOPLEFT">
+											<Offset>
+												<AbsDimension x="-300" y="100"/>
+											</Offset>
+										</Anchor>
+									</Anchors>
+								</FontString>
+							</Layer>
+						</Layers>
+						<Scripts>
+							<OnClick>
+								CharSelect_Test();
+							</OnClick>
+						</Scripts>
+					</Button>
+
 					<Button name="CharSelectEnterWorldButton" inherits="GlueButtonTemplate" text="ENTER_WORLD">
 						<Size>
-							<AbsDimension x="200" y="60"/>
+							<AbsDimension x="256" y="70"/>
 						</Size>
 						<Anchors>
 							<Anchor point="BOTTOM">
 								<Offset>
-									<AbsDimension x="0" y="30"/>
+									<AbsDimension x="0" y="16"/>
 								</Offset>
 							</Anchor>
 						</Anchors>
@@ -197,6 +277,7 @@
 								CharacterSelect_EnterWorld();
 							</OnClick>
 							<OnUpdate>
+								GlueButtonMaster_OnUpdate(self, elapsed);
 								CharacterSelect_DeathKnightSwap(self);
 							</OnUpdate>
 						</Scripts>
@@ -206,9 +287,9 @@
 							<AbsDimension x="50" y="50"/>
 						</Size>
 						<Anchors>
-							<Anchor point="TOP" relativeTo="CharSelectEnterWorldButton" relativePoint="BOTTOM">
+							<Anchor point="LEFT" relativeTo="CharSelectCharacterName" relativePoint="RIGHT">
 								<Offset>
-									<AbsDimension x="-15" y="19"/>
+									<AbsDimension x="0" y="0"/>
 								</Offset>
 							</Anchor>
 						</Anchors>
@@ -250,9 +331,9 @@
 							<AbsDimension x="50" y="50"/>
 						</Size>
 						<Anchors>
-							<Anchor point="LEFT" relativeTo="CharacterSelectRotateLeft" relativePoint="RIGHT">
+							<Anchor point="RIGHT" relativeTo="CharSelectCharacterName" relativePoint="LEFT">
 								<Offset>
-									<AbsDimension x="-19" y="0"/>
+									<AbsDimension x="0" y="0"/>
 								</Offset>
 							</Anchor>
 						</Anchors>
@@ -285,14 +366,14 @@
 							</Anchors>
 						</HighlightTexture>
 					</Button>
-					<Button name="CharacterSelectBackButton" inherits="GlueButtonSmallTemplate" text="BACK">
+					<Button name="CharacterSelectBackButton" inherits="GlueButtonTemplate" text="BACK">
 						<Size>
-							<AbsDimension x="100" y="35"/>
+							<AbsDimension x="150" y="51"/>
 						</Size>
 						<Anchors>
 							<Anchor point="BOTTOMRIGHT">
 								<Offset>
-									<AbsDimension x="-30" y="25"/>
+									<AbsDimension x="-5" y="5"/>
 								</Offset>
 							</Anchor>
 						</Anchors>
@@ -301,31 +382,36 @@
 								CharacterSelect_Exit();
 							</OnClick>
 							<OnUpdate>
+								GlueButtonMaster_OnUpdate(self, elapsed);
 								CharacterSelect_DeathKnightSwap(self);
 							</OnUpdate>
 						</Scripts>
 					</Button>
-					<Button name="CharacterSelectAddonsButton" inherits="GlueButtonSmallTemplate" hidden="true" text="ADDONS">
+					<Button name="CharacterSelectAddonsButton" inherits="GlueButtonTemplate" text="ADDONS">
 						<Size>
-							<AbsDimension x="150" y="35"/>
+							<AbsDimension x="150" y="51"/>
 						</Size>
-						<Anchors>
-							<Anchor point="BOTTOMLEFT">
-								<Offset>
-									<AbsDimension x="30" y="25"/>
-								</Offset>
-							</Anchor>
-						</Anchors>
 						<Layers>
-							<Layer level="OVERLAY">
-								<Texture name="$parentGlow" file="Interface\Glues\Common\Glue-Panel-Button-Glow" hidden="true" alphaMode="ADD">
-									<TexCoords left="0" right="0.578125" top="0" bottom="0.75"/>
+							<Layer level="ARTWORK">
+								<Texture name="$parentGlow" file="Interface\Glues\Common\Glues-BigButton-Glow" setAllPoints="true" alphaMode="ADD">
+									<TexCoords left="0.14453125" right="0.85546875" top="0" bottom="1"/>
+									<Size>
+										<AbsDimension x="150" y="51"/>
+									</Size>
 								</Texture>
 							</Layer>
 						</Layers>
+						<Anchors>
+							<Anchor point="BOTTOMLEFT">
+								<Offset>
+									<AbsDimension x="5" y="5"/>
+								</Offset>
+							</Anchor>
+						</Anchors>
 						<Scripts>
 							<OnClick>
-								AddonList:Show();
+								GlueFrameFadeIn(AddonList, VX_FADE_REFRESH, AddonList:Show());
+								--AddonList:Show();
 							</OnClick>
 							<OnUpdate>
 								GlueButtonMaster_OnUpdate(self, elapsed);
@@ -345,11 +431,6 @@
 							</Anchor>
 						</Anchors>
 						<Layers>
-							<Layer level="OVERLAY">
-								<Texture name="$parentGlow" file="Interface\Glues\Common\Glue-Panel-Button-Glow" hidden="false" alphaMode="ADD">
-									<TexCoords left="0" right="0.578125" top="0" bottom="0.75"/>
-								</Texture>
-							</Layer>
 							<Layer level="BACKGROUND">
 								<FontString name="RealmSplitCurrentChoice" inherits="GlueFontNormal" justifyH="CENTER">
 									<Size>
@@ -387,40 +468,6 @@
 						</Scripts>
 						<NormalFont style="GlueFontHighlight"/>
 					</Button>
-					<Button name="CharacterSelectUpgradeAccountButton" inherits="GlueButtonTemplate" text="UPGRADE_ACCOUNT" hidden="true">
-						<Size x="320" y="60"/>
-						<Anchors>
-							<Anchor point="TOP" x="0" y="-10"/>
-						</Anchors>
-						<Scripts>
-							<OnClick>
-								UpgradeAccount();
-							</OnClick>
-							<OnUpdate>
-								CharacterSelect_DeathKnightSwap(self);
-							</OnUpdate>
-						</Scripts>
-					</Button>
-					<Button name="CharacterSelectDeleteButton" inherits="GlueButtonSmallTemplate" text="DELETE_CHARACTER">
-						<Size>
-							<AbsDimension x="165" y="35"/>
-						</Size>
-						<Anchors>
-							<Anchor point="RIGHT" relativeTo="CharacterSelectBackButton" relativePoint="LEFT">
-								<Offset>
-									<AbsDimension x="0" y="0"/>
-								</Offset>
-							</Anchor>
-						</Anchors>
-						<Scripts>
-							<OnClick>
-								CharacterSelect_Delete();
-							</OnClick>
-							<OnUpdate>
-								CharacterSelect_DeathKnightSwap(self);
-							</OnUpdate>
-						</Scripts>
-					</Button>
 					<Frame name="CharacterSelectCharacterFrame">
 						<Size>
 							<AbsDimension x="260" y="642"/>
@@ -428,7 +475,7 @@
 						<Anchors>
 							<Anchor point="TOPRIGHT">
 								<Offset>
-									<AbsDimension x="-5" y="-15"/>
+									<AbsDimension x="-5" y="-8"/>
 								</Offset>
 							</Anchor>
 						</Anchors>
@@ -459,9 +506,9 @@
 							</Layer>
 						</Layers>
 						<Frames>
-							<Button name="CharSelectChangeRealmButton" inherits="GlueButtonSmallTemplate" text="CHANGE_REALM">
+							<Button name="CharSelectChangeRealmButton" inherits="GlueButtonTemplate" text="CHANGE_REALM">
 								<Size>
-									<AbsDimension x="135" y="33"/>
+									<AbsDimension x="256" y="51"/>
 								</Size>
 								<Anchors>
 									<Anchor point="TOP" relativeTo="CharSelectRealmName" relativePoint="BOTTOM">
@@ -478,6 +525,7 @@
 										CharacterSelect_ChangeRealm();
 									</OnClick>
 									<OnUpdate>
+										GlueButtonMaster_OnUpdate(self, elapsed);
 										CharacterSelect_DeathKnightSwap(self);
 									</OnUpdate>
 								</Scripts>
@@ -572,9 +620,9 @@
 									</Anchor>
 								</Anchors>
 							</Button>
-							<Button name="CharSelectCreateCharacterButton" inherits="GlueButtonSmallTemplate" hidden="true" text="CREATE_NEW_CHARACTER">
+							<Button name="CharSelectCreateCharacterButton" inherits="GlueButtonTemplate" hidden="true" text="CREATE_NEW_CHARACTER">
 								<Size>
-									<AbsDimension x="200" y="45"/>
+									<AbsDimension x="256" y="51"/>
 								</Size>
 								<Anchors>
 									<Anchor point="BOTTOM">
@@ -591,6 +639,7 @@
 										CharacterSelect_SelectCharacter(self:GetID());
 									</OnClick>
 									<OnUpdate>
+										GlueButtonMaster_OnUpdate(self, elapsed);
 										CharacterSelect_DeathKnightSwap(self);
 									</OnUpdate>
 								</Scripts>
@@ -808,6 +857,7 @@
 									</Anchor>
 								</Anchors>
 							</Button>
+
 							</Frames>
 						<Backdrop bgFile="Interface\Glues\Common\Glue-Tooltip-Background" edgeFile="Interface\Glues\Common\Glue-Tooltip-Border" tile="true">
 							<BackgroundInsets>
@@ -821,8 +871,49 @@
 							</EdgeSize>
 						</Backdrop>
 					</Frame>
+					<Button name="CharacterSelectUpgradeAccountButton" inherits="GlueButtonTemplate" text="UPGRADE_ACCOUNT" hidden="true">
+						<Size x="320" y="60"/>
+						<Anchors>
+							<Anchor point="TOP" x="0" y="-10"/>
+						</Anchors>
+						<Scripts>
+							<OnClick>
+								UpgradeAccount();
+							</OnClick>
+							<OnUpdate>
+								CharacterSelect_DeathKnightSwap(self);
+							</OnUpdate>
+						</Scripts>
+					</Button>
+					<Button name="CharacterSelectDeleteButton" inherits="GlueButtonTemplate" text="DELETE_CHARACTER">
+						<Size>
+							<AbsDimension x="200" y="51"/>
+						</Size>
+						<Anchors>
+							<Anchor point="TOP" relativeTo="CharacterSelectCharacterFrame" relativePoint="BOTTOM">
+								<Offset>
+									<AbsDimension x="0" y="10"/>
+								</Offset>
+							</Anchor>
+						</Anchors>
+						<Scripts>
+							<OnLoad>
+								self:SetWidth(self:GetTextWidth() + 50);
+							</OnLoad>
+							<OnClick>
+								CharacterSelect_Delete();
+							</OnClick>
+							<OnUpdate>
+								GlueButtonMaster_OnUpdate(self, elapsed);
+								CharacterSelect_DeathKnightSwap(self);
+							</OnUpdate>
+						</Scripts>
+					</Button>
 				</Frames>
 				<Scripts>
+					<OnShow>
+						CharacterSelectLogo:SetTexture(VX_LOGO_TEXTURE);
+					</OnShow>
 					<OnMouseDown>
 						CharacterSelectFrame_OnMouseDown(button);
 					</OnMouseDown>
@@ -936,7 +1027,7 @@
 		<Frames>
 			<Frame name="CharacterDeleteBackground">
 				<Size>
-					<AbsDimension x="512" y="256"/>
+					<AbsDimension x="400" y="256"/>
 				</Size>
 				<Anchors>
 					<Anchor point="CENTER">
@@ -960,7 +1051,7 @@
 					<Layer level="ARTWORK">
 						<FontString name="CharacterDeleteText1" inherits="GlueFontNormalLarge">
 							<Size>
-								<AbsDimension x="400" y="0"/>
+								<AbsDimension x="304" y="0"/>
 							</Size>
 							<Anchors>
 								<Anchor point="TOP">
@@ -972,7 +1063,7 @@
 						</FontString>
 						<FontString name="CharacterDeleteText2" inherits="GlueFontNormalSmall" text="CONFIRM_CHAR_DELETE_INSTRUCTIONS">
 							<Size>
-								<AbsDimension x="400" y="0"/>
+								<AbsDimension x="304" y="0"/>
 							</Size>
 							<Anchors>
 								<Anchor point="TOP" relativeTo="CharacterDeleteText1" relativePoint="BOTTOM">
@@ -982,14 +1073,14 @@
 								</Anchor>
 							</Anchors>
 						</FontString>
-						<Texture name="CharacterDeleteAlertIcon" file="Interface\DialogFrame\UI-Dialog-Icon-AlertNew">
+						<Texture name="CharacterDeleteAlertIcon" file="Interface\DialogFrame\DialogAlertIcon">
 							<Size>
-								<AbsDimension x="48" y="48"/>
+								<AbsDimension x="64" y="64"/>
 							</Size>
 							<Anchors>
-								<Anchor point="LEFT">
+								<Anchor point="TOPLEFT">
 									<Offset>
-										<AbsDimension x="24" y="10"/>
+										<AbsDimension x="16" y="-32"/>
 									</Offset>
 								</Anchor>
 							</Anchors>
@@ -998,38 +1089,48 @@
 				</Layers>
 				<Frames>
 					<Button name="CharacterDeleteButton1" inherits="GlueDialogButtonTemplate" id="1" text="OKAY">
+						<Size>
+							<AbsDimension x="150" y="51"/>
+						</Size>
 						<Anchors>
 							<Anchor point="BOTTOMRIGHT" relativeTo="CharacterDeleteBackground" relativePoint="BOTTOM">
 								<Offset>
-									<AbsDimension x="-6" y="16"/>
+									<AbsDimension x="-8" y="16"/>
 								</Offset>
 							</Anchor>
 						</Anchors>
 						<Scripts>
 							<OnClick>
 								DeleteCharacter(CharacterSelect.selectedIndex);
-								CharacterDeleteDialog:Hide();
+								--CharacterDeleteDialog:Hide();
+								GlueFrameFadeOut(CharacterDeleteDialog, VX_FADE_REFRESH, "HIDE");
 								PlaySound("gsTitleOptionOK");
 							</OnClick> 
 							<OnUpdate>
+								GlueButtonMaster_OnUpdate(self, elapsed);
 								CharacterSelect_DeathKnightSwap(self);
 							</OnUpdate>
 						</Scripts>
 					</Button>
 					<Button name="CharacterDeleteButton2" inherits="GlueDialogButtonTemplate" id="2" text="CANCEL">
+						<Size>
+							<AbsDimension x="150" y="51"/>
+						</Size>
 						<Anchors>
 							<Anchor point="LEFT" relativeTo="CharacterDeleteButton1" relativePoint="RIGHT">
 								<Offset>
-									<AbsDimension x="13" y="0"/>
+									<AbsDimension x="16" y="0"/>
 								</Offset>
 							</Anchor>
 						</Anchors>
 						<Scripts>
 							<OnClick>
-								CharacterDeleteDialog:Hide();
+								GlueFrameFadeOut(CharacterDeleteDialog, VX_FADE_REFRESH, "HIDE");
+								--CharacterDeleteDialog:Hide();
 								PlaySound("gsTitleOptionExit");
 							</OnClick>
 							<OnUpdate>
+								GlueButtonMaster_OnUpdate(self, elapsed);
 								CharacterSelect_DeathKnightSwap(self);
 							</OnUpdate>
 						</Scripts>
@@ -1048,7 +1149,7 @@
 					</Anchor>
 				</Anchors>
 				<Layers>
-					<Layer level="BACKGROUND">
+					<Layer level="ARTWORK">
 						<Texture file="Interface\ChatFrame\UI-ChatInputBorder-Left">
 							<Size>
 								<AbsDimension x="75" y="32"/>
@@ -1088,11 +1189,13 @@
 					<OnEnterPressed>
 						if ( CharacterDeleteButton1:IsEnabled() == 1 ) then
 							DeleteCharacter(CharacterSelect.selectedIndex);
-							CharacterDeleteDialog:Hide();
+							GlueFrameFadeOut(CharacterDeleteDialog, VX_FADE_REFRESH, "HIDE");
+							--CharacterDeleteDialog:Hide();
 						end
 					</OnEnterPressed>
 					<OnEscapePressed>
-						CharacterDeleteDialog:Hide();
+						GlueFrameFadeOut(CharacterDeleteDialog, VX_FADE_REFRESH, "HIDE");
+						--CharacterDeleteDialog:Hide();
 					</OnEscapePressed>
 				</Scripts>
 				<FontString inherits="GlueFontHighlight"/>
@@ -1158,14 +1261,14 @@
 								</Anchor>
 							</Anchors>
 						</FontString>
-						<Texture name="CharacterRenameAlertIcon" file="Interface\DialogFrame\UI-Dialog-Icon-AlertNew">
+						<Texture name="CharacterRenameAlertIcon" file="Interface\DialogFrame\DialogAlertIcon">
 							<Size>
-								<AbsDimension x="48" y="48"/>
+								<AbsDimension x="64" y="64"/>
 							</Size>
 							<Anchors>
 								<Anchor point="LEFT">
 									<Offset>
-										<AbsDimension x="24" y="10"/>
+										<AbsDimension x="12" y="10"/>
 									</Offset>
 								</Anchor>
 							</Anchors>
@@ -1184,10 +1287,12 @@
 						<Scripts>
 							<OnClick>
 								if ( RenameCharacter(CharacterSelect.selectedIndex, CharacterRenameEditBox:GetText()) ) then
-									CharacterRenameDialog:Hide();
+									GlueFrameFadeOut(CharacterRenameDialog, VX_FADE_REFRESH, "HIDE");
+									--CharacterRenameDialog:Hide();
 								end
 							</OnClick> 
 							<OnUpdate>
+								GlueButtonMaster_OnUpdate(self, elapsed);
 								CharacterSelect_DeathKnightSwap(self);
 							</OnUpdate>
 						</Scripts>
@@ -1202,9 +1307,11 @@
 						</Anchors>
 						<Scripts>
 							<OnClick>
-								CharacterRenameDialog:Hide();
+								GlueFrameFadeOut(CharacterRenameDialog, VX_FADE_REFRESH, "HIDE");
+								--CharacterRenameDialog:Hide();
 							</OnClick>
 							<OnUpdate>
+								GlueButtonMaster_OnUpdate(self, elapsed);
 								CharacterSelect_DeathKnightSwap(self);
 							</OnUpdate>
 						</Scripts>
@@ -1255,11 +1362,13 @@
 				<Scripts>
 					<OnEnterPressed>
 						if ( RenameCharacter(CharacterSelect.selectedIndex, CharacterRenameEditBox:GetText()) ) then
-							CharacterRenameDialog:Hide();
+							GlueFrameFadeOut(CharacterRenameDialog, VX_FADE_REFRESH, "HIDE");
+							--CharacterRenameDialog:Hide();
 						end
 					</OnEnterPressed>
 					<OnEscapePressed>
-						CharacterRenameDialog:Hide();
+						GlueFrameFadeOut(CharacterRenameDialog, VX_FADE_REFRESH, "HIDE");
+						--CharacterRenameDialog:Hide();
 					</OnEscapePressed>
 				</Scripts>
 				<FontString inherits="GlueFontHighlight"/>

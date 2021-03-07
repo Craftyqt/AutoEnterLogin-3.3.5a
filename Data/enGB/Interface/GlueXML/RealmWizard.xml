@@ -39,6 +39,27 @@
 	</CheckButton>
 	<ModelFFX name="RealmWizard" toplevel="true" parent="GlueParent" setAllPoints="true" enableKeyboard="true" hidden="true" fogNear="0" fogFar="1200" glow="0.08">
 		<Frames>
+			<Frame name="BGRealmWizardFrame" setAllPoints="true">
+				<Layers>
+					<Layer level="BACKGROUND">
+						<Texture name="VXBGTextureRW" file="Interface\Glues\LoadingScreens\LoadScreenRubySanctum" hidden="true">
+							<Anchors>
+								<Anchor point="BOTTOMLEFT">
+									<Offset>
+										<AbsDimension x="0" y="0"/>
+									</Offset>
+								</Anchor>
+								<Anchor point="TOPRIGHT">
+									<Offset>
+										<AbsDimension x="0" y="0"/>
+									</Offset>
+								</Anchor>
+							</Anchors>
+						</Texture>
+					</Layer>
+				</Layers>
+			</Frame>
+
 			<Frame name="RealmWizardUI" setAllPoints="true">
 				<Layers>
 					<Layer level="OVERLAY">
@@ -514,7 +535,6 @@
 										else
 											SetPreferredInfo(RealmWizard.selectedCategory, RealmWizardGameTypeButton2:GetChecked(), RealmWizardGameTypeButton3:GetChecked());
 										end
-										GlueFrameFadeOut(RealmWizardUI, LOGIN_FADE_OUT);
 									</OnClick>
 								</Scripts>
 							</Button>
@@ -560,6 +580,7 @@
 			</OnLoad>
 			<OnShow>
 				RealmWizard_OnShow(self);
+				RealmWizardLogo:SetTexture(VX_LOGO_TEXTURE);
 			</OnShow>
 			<OnHide>
 				RealmWizard_OnHide(self);

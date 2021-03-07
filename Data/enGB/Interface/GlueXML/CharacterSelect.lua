@@ -1,3 +1,7 @@
+function CharSelect_Test()
+	--CharSelectTestText:SetText(GetNumCharacters().."zzz");
+end
+
 CHARACTER_SELECT_ROTATION_START_X = nil;
 CHARACTER_SELECT_INITIAL_FACING = nil;
 
@@ -23,7 +27,7 @@ function CharacterSelect_OnLoad(self)
 	self:RegisterEvent("SUGGEST_REALM");
 	self:RegisterEvent("FORCE_RENAME_CHARACTER");
 
-	-- CharacterSelect:SetModel("Interface\\Glues\\Models\\UI_Orc\\UI_Orc.m2");
+	-- CharacterSelect:SetModel("Interface\\Glues\\Models\\UI_MainMenu\\UI_MainMenu.m2");
 
 	-- local fogInfo = CharModelFogInfo["ORC"];
 	-- CharacterSelect:SetFogColor(fogInfo.r, fogInfo.g, fogInfo.b);
@@ -40,13 +44,16 @@ function CharacterSelect_OnLoad(self)
 end
 
 function CharacterSelect_OnShow()
+	--CharSelectTestButton:Show();
 	-- request account data times from the server (so we know if we should refresh keybindings, etc...)
 	ReadyForAccountDataTimes()
 	
 	local CurrentModel = CharacterSelect.currentModel;
 
 	if ( CurrentModel ) then
-		PlayGlueAmbience(GlueAmbienceTracks[strupper(CurrentModel)], 4.0);
+		if CurrentModel ~= "MainMenu" then
+			PlayGlueAmbience(GlueAmbienceTracks[strupper(CurrentModel)], 4.0);
+		end
 	end
 
 	UpdateAddonButton();
@@ -142,12 +149,13 @@ function CharacterSelect_OnShow()
 			end
 			GameRoomBillingFrameText:SetText(billingText);
 			GameRoomBillingFrame:SetHeight(GameRoomBillingFrameText:GetHeight() + 26);
-			GameRoomBillingFrame:Show();
+			GlueFrameFadeIn(GameRoomBillingFrame, VX_FADE_REFRESH, GameRoomBillingFrame:Show());
+			--GameRoomBillingFrame:Show();
 			CharacterSelectRealmSplitButton:ClearAllPoints();
 			CharacterSelectRealmSplitButton:SetPoint("TOP", GameRoomBillingFrame, "BOTTOM", 0, -10);
 		end
 	end
-	
+
 	if( IsTrialAccount() ) then
 		CharacterSelectUpgradeAccountButton:Show();
 	else
@@ -155,7 +163,8 @@ function CharacterSelect_OnShow()
 	end
 
 	-- fadein the character select ui
-	GlueFrameFadeIn(CharacterSelectUI, CHARACTER_SELECT_FADE_IN)
+	--GlueFrameFadeIn(CharacterSelectUI, CHARACTER_SELECT_FADE_IN)
+	GlueFrameFadeIn(CharacterSelect, VX_FADE_LOAD); 
 
 	RealmSplitCurrentChoice:Hide();
 	RequestRealmSplitInfo();
@@ -234,18 +243,27 @@ function CharacterSelect_OnKeyDown(self,key)
 		local numChars = GetNumCharacters();
 		if ( numChars > 1 ) then
 			if ( self.selectedIndex > 1 ) then
-				CharacterSelect_SelectCharacter(self.selectedIndex - 1);
+				--CharacterSelect_SelectCharacter(self.selectedIndex - 1);
+				CharacterSelectUI.id = self.selectedIndex - 1;
+				GlueFrameFadeOut(CharacterSelect, VX_FADE_REFRESH, CharacterSelectButton_OnClick_Wait);
+
 			else
-				CharacterSelect_SelectCharacter(numChars);
+				--CharacterSelect_SelectCharacter(numChars);
+				CharacterSelectUI.id = numChars;
+				GlueFrameFadeOut(CharacterSelect, VX_FADE_REFRESH, CharacterSelectButton_OnClick_Wait);
 			end
 		end
 	elseif ( arg1 == "DOWN" or arg1 == "RIGHT" ) then
 		local numChars = GetNumCharacters();
 		if ( numChars > 1 ) then
 			if ( self.selectedIndex < GetNumCharacters() ) then
-				CharacterSelect_SelectCharacter(self.selectedIndex + 1);
+				--CharacterSelect_SelectCharacter(self.selectedIndex + 1);
+				CharacterSelectUI.id = self.selectedIndex + 1;
+				GlueFrameFadeOut(CharacterSelect, VX_FADE_REFRESH, CharacterSelectButton_OnClick_Wait);
 			else
-				CharacterSelect_SelectCharacter(1);
+				--CharacterSelect_SelectCharacter(1);
+				CharacterSelectUI.id = 1;
+				GlueFrameFadeOut(CharacterSelect, VX_FADE_REFRESH, CharacterSelectButton_OnClick_Wait);
 			end
 		end
 	end
@@ -280,12 +298,14 @@ function CharacterSelect_OnEvent(self, event, ...)
 			if ( RealmList:IsShown() ) then
 				RealmListUpdate();
 			else
-				RealmList:Show();
+				GlueFrameFadeIn(RealmList, VX_FADE_REFRESH, RealmList:Show());
+				--RealmList:Show();
 			end
 		end
 	elseif ( event == "FORCE_RENAME_CHARACTER" ) then
 		local message = ...;
-		CharacterRenameDialog:Show();
+		GlueFrameFadeIn(CharacterRenameDialog, VX_FADE_REFRESH, CharacterRenameDialog:Show());
+		--CharacterRenameDialog:Show();
 		CharacterRenameText1:SetText(_G[message]);
 	end
 end
@@ -297,12 +317,14 @@ end
 
 function UpdateCharacterSelection(self)
 	for i=1, MAX_CHARACTERS_DISPLAYED, 1 do
-		_G["CharSelectCharacterButton"..i]:UnlockHighlight();
+	--	_G["CharSelectCharacterButton"..i]:UnlockHighlight();
+		_G[_G["CharSelectCharacterButton"..i]:GetName().."OnSelect"]:Hide();
 	end
 
 	local index = self.selectedIndex;
 	if ( (index > 0) and (index <= MAX_CHARACTERS_DISPLAYED) )then
-		_G["CharSelectCharacterButton"..index]:LockHighlight();
+	--	_G["CharSelectCharacterButton"..index]:LockHighlight();
+		_G[_G["CharSelectCharacterButton"..index]:GetName().."OnSelect"]:Show();
 	end
 end
 
@@ -310,6 +332,12 @@ function UpdateCharacterList()
 	local numChars = GetNumCharacters();
 	local index = 1;
 	local coords;
+
+	_G["CharacterSelectCharacterFrame"]:SetHeight( 647 - ( 9 - numChars ) * 57 );
+	if numChars == 10 then
+		_G["CharacterSelectCharacterFrame"]:SetHeight(647);
+	end
+
 	for i=1, numChars, 1 do
 		local name, race, class, level, zone, sex, ghost, PCC, PRC, PFC = GetCharacterInfo(i);
 		local button = _G["CharSelectCharacterButton"..index];
@@ -350,9 +378,13 @@ function UpdateCharacterList()
 	if ( numChars == 0 ) then
 		CharacterSelectDeleteButton:Disable();
 		CharSelectEnterWorldButton:Disable();
+		CharacterSelectRotateLeft:Hide();
+		CharacterSelectRotateRight:Hide();
 	else
 		CharacterSelectDeleteButton:Enable();
 		CharSelectEnterWorldButton:Enable();
+		CharacterSelectRotateLeft:Show();
+		CharacterSelectRotateRight:Show();
 	end
 
 	CharacterSelect.createIndex = 0;
@@ -380,6 +412,7 @@ function UpdateCharacterList()
 	if ( numChars == 0 ) then
 		CharacterSelect.selectedIndex = 0;
 		CharacterSelect_SelectCharacter(CharacterSelect.selectedIndex, 1);
+		ShowScene(CharacterSelect);
 		return;
 	end
 
@@ -398,8 +431,16 @@ end
 function CharacterSelectButton_OnClick(self)
 	local id = self:GetID();
 	if ( id ~= CharacterSelect.selectedIndex ) then
-		CharacterSelect_SelectCharacter(id);
+		CharacterSelectUI.id = id;
+		GlueFrameFadeOut(CharacterSelect, VX_FADE_REFRESH, CharacterSelectButton_OnClick_Wait);
+		--CharacterSelect_SelectCharacter(id);
 	end
+end
+
+function CharacterSelectButton_OnClick_Wait()
+	CharacterSelect_SelectCharacter(CharacterSelectUI.id);
+	CharacterSelectUI.id = nil;
+	GlueFrameFadeIn(CharacterSelect, VX_FADE_REFRESH);
 end
 
 function CharacterSelectButton_OnDoubleClick(self)
@@ -424,13 +465,21 @@ function CharacterSelect_SelectCharacter(id, noCreate)
 	if ( id == CharacterSelect.createIndex ) then
 		if ( not noCreate ) then
 			PlaySound("gsCharacterSelectionCreateNew");
-			SetGlueScreen("charcreate");
+
+			GlueFrameFadeOut(CharacterSelect, VX_FADE_UNLOAD, CharacterSelect_CharacterCreate_Wait);
+			--SetGlueScreen("charcreate");
 		end
 	else
 		CharacterSelect.currentModel = GetSelectBackgroundModel(id);
-		SetBackgroundModel(CharacterSelect,CharacterSelect.currentModel);
+		if GetNumCharacters()>0 then
+			SetBackgroundModel(CharacterSelect,CharacterSelect.currentModel);
+			if VXBGTextureCS then VXBGTextureCS:Hide(); end
+		else
+			ShowScene(CharacterSelect);
+		end
 
 		SelectCharacter(id);
+
 	end
 end
 
@@ -444,12 +493,26 @@ end
 function CharacterSelect_EnterWorld()
 	PlaySound("gsCharacterSelectionEnterWorld");
 	StopGlueAmbience();
+	GlueFrameFadeOut(CharacterSelect, VX_FADE_UNLOAD, CharacterSelect_EnterWorld_Wait);
+	--EnterWorld();
+end
+
+function CharacterSelect_EnterWorld_Wait()
+	if VX_SOUNDBG then
+		SetCVar("Sound_EnableSoundWhenGameIsInBG", VX_SOUNDBG);
+		VX_SOUNDBG = nil;
+	end
 	EnterWorld();
 end
 
 function CharacterSelect_Exit()
 	PlaySound("gsCharacterSelectionExit");
 	DisconnectFromServer();
+	GlueFrameFadeOut(CharacterSelect, VX_FADE_UNLOAD, CharacterSelect_Exit_Wait);
+	--SetGlueScreen("login");
+end
+
+function CharacterSelect_Exit_Wait()
 	SetGlueScreen("login");
 end
 
@@ -465,13 +528,15 @@ end
 function CharacterSelect_Delete()
 	PlaySound("gsCharacterSelectionDelCharacter");
 	if ( CharacterSelect.selectedIndex > 0 ) then
-		CharacterDeleteDialog:Show();
+		GlueFrameFadeIn(CharacterDeleteDialog, VX_FADE_REFRESH, CharacterDeleteDialog:Show());
+		--CharacterDeleteDialog:Show();
 	end
 end
 
 function CharacterSelect_ChangeRealm()
 	PlaySound("gsCharacterSelectionDelCharacter");
 	RequestRealmList(1);
+	GlueFrameFadeIn(RealmList, VX_FADE_REFRESH, RealmList:Show());
 end
 
 function CharacterSelectFrame_OnMouseDown(button)
@@ -531,24 +596,29 @@ function CharacterSelect_PaidServiceOnClick(self, button, down, service)
 	PAID_SERVICE_CHARACTER_ID = self:GetID();
 	PAID_SERVICE_TYPE = service;
 	PlaySound("gsCharacterSelectionCreateNew");
+	GlueFrameFadeOut(CharacterSelect, VX_FADE_UNLOAD, CharacterSelect_CharacterCreate_Wait);
+	--SetGlueScreen("charcreate");
+end
+
+function CharacterSelect_CharacterCreate_Wait()
 	SetGlueScreen("charcreate");
 end
 
-function CharacterSelect_DeathKnightSwap(self)
-	if ( CharacterSelect.currentModel == "DEATHKNIGHT" ) then
-		if (self.currentModel ~= "DEATHKNIGHT") then
-			self.currentModel = "DEATHKNIGHT";
-			self:SetNormalTexture("Interface\\Glues\\Common\\Glue-Panel-Button-Up-Blue");
-			self:SetPushedTexture("Interface\\Glues\\Common\\Glue-Panel-Button-Down-Blue");
-			self:SetHighlightTexture("Interface\\Glues\\Common\\Glue-Panel-Button-Highlight-Blue");
-		end
-	else
-		if (self.currentModel == "DEATHKNIGHT") then
-			self.currentModel = nil;
-			self:SetNormalTexture("Interface\\Glues\\Common\\Glue-Panel-Button-Up");
-			self:SetPushedTexture("Interface\\Glues\\Common\\Glue-Panel-Button-Down");
-			self:SetHighlightTexture("Interface\\Glues\\Common\\Glue-Panel-Button-Highlight");
-		end
-	end
-end
 
+function CharacterSelect_DeathKnightSwap(self)
+	--if ( CharacterSelect.currentModel == "DEATHKNIGHT" ) then
+	--	if (self.currentModel ~= "DEATHKNIGHT") then
+	--		self.currentModel = "DEATHKNIGHT";
+	--		self:SetNormalTexture("Interface\\Glues\\Common\\Glue-Panel-Button-Up-Blue");
+	--		self:SetPushedTexture("Interface\\Glues\\Common\\Glue-Panel-Button-Down-Blue");
+	--		self:SetHighlightTexture("Interface\\Glues\\Common\\Glue-Panel-Button-Highlight-Blue");
+	--	end
+	--else
+	--	if (self.currentModel == "DEATHKNIGHT") then
+	--		self.currentModel = nil;
+	--		self:SetNormalTexture("Interface\\Glues\\Common\\Glue-Panel-Button-Up");
+	--		self:SetPushedTexture("Interface\\Glues\\Common\\Glue-Panel-Button-Down");
+	--		self:SetHighlightTexture("Interface\\Glues\\Common\\Glue-Panel-Button-Highlight");
+	--	end
+	--end
+end

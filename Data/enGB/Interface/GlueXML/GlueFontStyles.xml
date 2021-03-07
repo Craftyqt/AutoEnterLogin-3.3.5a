@@ -2,7 +2,7 @@
 ..\FrameXML\UI.xsd">
 	<Script>
 		NORMAL_FONT_COLOR = {r=1.0, g=0.82, b=0};
-		HIGHLIGHT_FONT_COLOR = {r=1.0, g=1.0, b=1.0};
+		HIGHLIGHT_FONT_COLOR = {r=1.0, g=0.82, b=0.82};
 		GRAY_FONT_COLOR = {r=0.5, g=0.5, b=0.5};
 		GREEN_FONT_COLOR = {r=0.1, g=1.0, b=0.1};
 		RED_FONT_COLOR = {r=1.0, g=0.1, b=0.1};
@@ -22,7 +22,7 @@
 	</Font>
 	<Font name="GlueFontNormalLeft" inherits="GlueFontNormal" justifyH="LEFT" virtual="true"/>
 	<Font name="GlueFontHighlight" inherits="GlueFontNormal" virtual="true">
-		<Color r="1.0" g="1.0" b="1.0"/>
+		<Color r="1.0" g="0.82" b="0.5"/>
 	</Font>
 	<Font name="GlueFontHighlightLeft" inherits="GlueFontHighlight" justifyH="LEFT" virtual="true"/>
 	<Font name="RealmDownNormal" inherits="GlueFontNormalLeft" virtual="true">
@@ -71,12 +71,12 @@
 	</Font>	
 	<Font name="GlueFontNormalExtraSmallLeft" inherits="GlueFontNormalExtraSmall" justifyH="LEFT" virtual="true"/>
 	<Font name="GlueFontHighlightSmall" inherits="GlueFontNormalSmall" virtual="true">
-		<Color r="1.0" g="1.0" b="1.0"/>
+		<Color r="1.0" g="0.82" b="0.5"/>
 	</Font>
 	<Font name="GlueFontHighlightSmallLeft" inherits="GlueFontHighlightSmall" justifyH="LEFT" virtual="true"/>
 	<Font name="GlueFontHighlightSmallLeftTop" inherits="GlueFontHighlightSmallLeft" justifyV="TOP" virtual="true"/>
 	<Font name="GlueFontHighlightExtraSmall" inherits="SystemFont_Shadow_Outline_Small" virtual="true">
-		<Color r="1.0" g="1.0" b="1.0"/>
+		<Color r="1.0" g="0.82" b="0.5"/>
 	</Font>
 	<Font name="GlueFontHighlightExtraSmallLeft" inherits="GlueFontHighlightExtraSmall" justifyH="LEFT" virtual="true"/>
 	<Font name="GlueFontHighlightExtraSmallLeftTop" inherits="GlueFontHighlightExtraSmallLeft" justifyV="TOP" virtual="true"/>
@@ -103,13 +103,13 @@
 		<Color r="1.0" g="0.78" b="0"/>
 	</Font>
 	<Font name="GlueFontHighlightHuge" inherits="GlueFontNormalHuge" virtual="true">
-		<Color r="1.0" g="1.0" b="1.0"/>
+		<Color r="1.0" g="0.82" b="0.5"/>
 	</Font>
 	<Font name="GlueFontDisableHuge" inherits="GlueFontNormalHuge" virtual="true">
 		<Color r="0.5" g="0.5" b="0.5"/>
 	</Font>
 	<Font name="GlueFontHighlightLarge" inherits="GlueFontNormalLarge" virtual="true">
-		<Color r="1.0" g="1.0" b="1.0"/>
+		<Color r="1.0" g="0.82" b="0.5"/>
 	</Font>
 	<Font name="GlueFontDisableLarge" inherits="GlueFontNormalLarge" virtual="true">
 		<Color r="0.5" g="0.5" b="0.5"/>
@@ -144,17 +144,17 @@
 		<Color r="1.0" g="0.82" b="0.0"/>
 	</Font>
 	<Font name="DialogButtonHighlightText" inherits="DialogButtonNormalText" virtual="true">
-		<Color r="1.0" g="1.0" b="1.0"/>
+		<Color r="1.0" g="0.82" b="0.5"/>
 	</Font>
 	<Font name="TOSFont" inherits="SystemFont_Outline_Med1" virtual="true">
-		<Color r="1.0" g="1.0" b="1.0"/>
+		<Color r="1.0" g=".82" b="0.5"/>
 	</Font>
 
 	<Font name="OptionsFontLeft" inherits="OptionsFont" justifyH="LEFT" virtual="true"/>
 	<Font name="OptionsFontSmallLeft" inherits="OptionsFontSmall" justifyH="LEFT" virtual="true"/>
 	<Font name="OptionsFontHighlightSmallLeft" inherits="OptionsFontHighlightSmall" justifyH="LEFT" virtual="true"/>
 	<Font name="OptionsFontHighlightSmallLeftTop" inherits="OptionsFontHighlightSmallLeft" justifyV="TOP" virtual="true"/>
-	
+
 	<Font name="CharacterCreateTooltipFont" inherits="SystemFont_Outline_Med2" virtual="true">
 		<Color r="1.0" g="1.0" b="1.0"/>
 	</Font>

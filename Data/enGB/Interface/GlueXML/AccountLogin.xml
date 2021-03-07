@@ -92,6 +92,27 @@
 
 	<ModelFFX name="AccountLogin" toplevel="true" parent="GlueParent" setAllPoints="true" enableKeyboard="true" hidden="true" fogNear="0" fogFar="1200" glow="0.08">
 		<Frames>
+			<Frame name="BGAccountLoginFrame" setAllPoints="true">
+				<Layers>
+					<Layer level="BACKGROUND">
+						<Texture name="VXBGTextureAL" file="Interface\Glues\LoadingScreens\LoadScreenRubySanctum" hidden="true">
+							<Anchors>
+								<Anchor point="BOTTOMLEFT">
+									<Offset>
+										<AbsDimension x="0" y="0"/>
+									</Offset>
+								</Anchor>
+								<Anchor point="TOPRIGHT">
+									<Offset>
+										<AbsDimension x="0" y="0"/>
+									</Offset>
+								</Anchor>
+							</Anchors>
+						</Texture>
+					</Layer>
+				</Layers>
+			</Frame>
+
 			<Frame name="AccountLoginUI" setAllPoints="true">
 				<Layers>
 					<Layer level="ARTWORK">
@@ -127,7 +148,7 @@
 						</FontString>
 					</Layer>
 					<Layer level="OVERLAY">
-						<Texture name="AccountLoginLogo" file="Interface\Glues\Common\Glues-WoW-WotLKLogo">
+						<Texture name="AccountLoginLogo" file="Interface\Glues\Common\Glues-WoW-Logo">
 							<Size>
 								<AbsDimension x="256" y="128"/>
 							</Size>
@@ -154,6 +175,23 @@
 					</Layer>
 				</Layers>
 				<Frames>
+
+					<Button name="AccountLoginTestButton" inherits="GlueButtonTemplate" text="Test" hidden="true">
+						<Size x="64" y="64"/>
+						<Anchors>
+							<Anchor point="TOP">
+								<Offset>
+									<AbsDimension x="0" y="-150"/>
+								</Offset>
+							</Anchor>
+						</Anchors>
+						<Scripts>
+							<OnClick>
+								AccountLogin_Test();
+							</OnClick>
+						</Scripts>
+					</Button>
+
 					<EditBox name="AccountLoginAccountEdit" letters="320">
 						<Size x="200" y="37"/>
 						<Anchors>
@@ -172,7 +210,7 @@
 									<Anchors>
 										<Anchor point="BOTTOM" relativePoint="TOP">
 											<Offset>
-												<AbsDimension x="0" y="-23"/>
+												<AbsDimension x="-2" y="-23"/>
 											</Offset>
 										</Anchor>
 									</Anchors>
@@ -365,6 +403,27 @@
 					</EditBox>
 
 					
+					<Frame name="AccountListDropDown" inherits="GlueDropDownMenuTemplate">
+						<Anchors>
+							<Anchor point="LEFT" relativeTo="AccountLoginAccountEdit" relativePoint="RIGHT">
+								<Offset>
+									<AbsDimension x="-15" y="-1"/>
+								</Offset>
+							</Anchor>
+						</Anchors>
+						<Scripts>
+							<OnLoad>
+								GlueDropDownMenu_SetWidth(1, self);
+								AccountListDropDownLeft:SetAlpha(0);
+								AccountListDropDownMiddle:SetAlpha(0);
+								AccountListDropDownRight:SetAlpha(0);
+								AccountListDropDown:SetScale(1.2);
+								GlueDropDownMenu_Initialize(self, AccountListDropDown_Initialize);
+								AccountListDropDownText:SetJustifyH("LEFT");
+							</OnLoad>
+						</Scripts>
+					</Frame>
+
 					<Frame name="AccountLoginDropDown" inherits="GlueDropDownMenuTemplate">
 						<Anchors>
 							<Anchor point="TOP" relativeTo="AccountLoginAccountEdit" relativePoint="BOTTOM">
@@ -382,12 +441,12 @@
 							</OnLoad>
 						</Scripts>
 					</Frame>
-					<Button name="AccountLoginLoginButton" inherits="GlueButtonTemplateBlue" text="LOGIN">
-						<Size x="220" y="45"/>
+					<Button name="AccountLoginLoginButton" inherits="GlueButtonTemplate" text="LOGIN">
+						<Size x="200" y="64"/>
 						<Anchors>
 							<Anchor point="BOTTOM">
 								<Offset>
-									<AbsDimension x="0" y="170"/>
+									<AbsDimension x="0" y="200"/>
 								</Offset>
 							</Anchor>
 						</Anchors>
@@ -397,11 +456,11 @@
 							</OnClick>
 						</Scripts>
 					</Button>
-					<Button name="AccountLoginExitButton" inherits="GlueButtonSmallTemplateBlue" text="QUIT">
+					<Button name="AccountLoginExitButton" inherits="GlueButtonSmallTemplate" text="QUIT">
 						<Anchors>
 							<Anchor point="BOTTOMRIGHT">
 								<Offset>
-									<AbsDimension x="-5" y="29"/>
+									<AbsDimension x="-16" y="16"/>
 								</Offset>
 							</Anchor>
 						</Anchors>
@@ -411,7 +470,7 @@
 							</OnClick>
 						</Scripts>
 					</Button>
-					<Button name="AccountLoginTOSButton" inherits="GlueButtonSmallTemplateBlue" text="TOS_FRAME_TITLE">
+					<Button name="AccountLoginTOSButton" inherits="GlueButtonSmallTemplate" text="TOS_FRAME_TITLE">
 						<Anchors>
 							<Anchor point="BOTTOM" relativeTo="AccountLoginExitButton" relativePoint="TOP">
 								<Offset>
@@ -441,7 +500,38 @@
 							</OnClick>
 						</Scripts>
 					</Button>
-					<Button name="AccountLoginCreditsButton" inherits="GlueButtonSmallTemplateBlue" text="CREDITS">
+
+					<Button name="AccountServerListButton" virtual="true">
+						<Size>
+							<AbsDimension x="300" y="51"/>
+						</Size>
+						<Anchors>
+							<Anchor point="TOPRIGHT" relativeTo="AccountLoginRealmName" relativePoint="BOTTOMRIGHT">
+								<Offset>
+									<AbsDimension x="0" y="10"/>
+								</Offset>
+							</Anchor>
+						</Anchors>
+						<ButtonText>
+							<Anchors>
+								<Anchor point="RIGHT">
+									<Offset>
+										<AbsDimension x="0" y="0"/>
+									</Offset>
+								</Anchor>
+							</Anchors>
+						</ButtonText>
+						<NormalFont style="GlueFontHighlight"/>
+						<HighlightFont style="GlueFontLightYellow"/>
+						<Scripts>
+							<OnClick>
+								ServerList:Show();
+								GlueFrameFadeIn(ServerList, VX_FADE_REFRESH);
+							</OnClick>
+						</Scripts>
+					</Button>
+
+					<Button name="AccountLoginCreditsButton" inherits="GlueButtonSmallTemplate" text="CREDITS">
 						<Anchors>
 							<Anchor point="BOTTOM" relativeTo="AccountLoginTOSButton" relativePoint="TOP">
 								<Offset>
@@ -455,7 +545,7 @@
 							</OnClick>
 						</Scripts>
 					</Button>
-					<Button name="AccountLoginCinematicsButton" inherits="GlueButtonSmallTemplateBlue" text="CINEMATICS">
+					<Button name="AccountLoginCinematicsButton" inherits="GlueButtonSmallTemplate" text="CINEMATICS">
 						<Anchors>
 							<Anchor point="BOTTOM" relativeTo="AccountLoginCreditsButton" relativePoint="TOP">
 								<Offset>
@@ -470,7 +560,7 @@
 							</OnClick>
 						</Scripts>
 					</Button>
-					<Button name="OptionsButton" inherits="GlueButtonSmallTemplateBlue" text="OPTIONS">
+					<Button name="OptionsButton" inherits="GlueButtonSmallTemplate" text="OPTIONS">
 						<Anchors>
 							<Anchor point="BOTTOM" relativeTo="AccountLoginCinematicsButton" relativePoint="TOP">
 								<Offset>
@@ -481,15 +571,15 @@
 						<Scripts>
 							<OnClick>
 								PlaySound("gsTitleOptions");
-								OptionsSelectFrame:Show();
+								GlueFrameFadeIn(OptionsSelectFrame, VX_FADE_REFRESH, OptionsSelectFrame:Show());
 							</OnClick>
 						</Scripts>
 					</Button>
-					<Button name="AccountLoginCommunityButton" inherits="GlueButtonSmallTemplateBlue" text="COMMUNITY_SITE">
+					<Button name="AccountLoginCommunityButton" inherits="GlueButtonSmallTemplate" text="COMMUNITY_SITE">
 						<Anchors>
 							<Anchor point="BOTTOMLEFT">
 								<Offset>
-									<AbsDimension x="10" y="135"/>
+									<AbsDimension x="16" y="135"/>
 								</Offset>
 							</Anchor>
 						</Anchors>
@@ -499,7 +589,7 @@
 							</OnClick>
 						</Scripts>
 					</Button>
-					<Button name="AccountLoginManageAccountButton" inherits="GlueButtonSmallTemplateBlue" text="MANAGE_ACCOUNT">
+					<Button name="AccountLoginManageAccountButton" inherits="GlueButtonSmallTemplate" text="MANAGE_ACCOUNT">
 						<Anchors>
 							<Anchor point="BOTTOM" relativeTo="AccountLoginCommunityButton" relativePoint="TOP">
 								<Offset>
@@ -582,6 +672,62 @@
 						<CheckedTexture file="Interface\Buttons\UI-CheckBox-Check"/>
 						<DisabledCheckedTexture file="Interface\Buttons\UI-CheckBox-Check-Disabled"/>
 					</CheckButton>
+
+					<Frame>
+						<Layers>
+							<Layer level="ARTWORK">
+								<FontString name="AccountLoginForceLoginText" inherits="GlueFontNormalSmall" text="VX_FORCE_LOGIN">
+									<Anchors>
+										<Anchor point="TOP" relativeTo="AccountLoginSaveAccountNameText" relativePoint="BOTTOM">
+											<Offset>
+												<AbsDimension x="0" y="-5"/>
+											</Offset>
+										</Anchor>
+									</Anchors>
+									<FontHeight>
+										<AbsValue val="10"/>
+									</FontHeight>
+									<Shadow>
+										<Offset>
+											<AbsDimension x="1" y="-1"/>
+										</Offset>
+										<Color r="0" g="0" b="0"/>
+									</Shadow>
+									<Color r="1.0" g="0.78" b="0"/>
+								</FontString>
+							</Layer>
+						</Layers>
+					</Frame>
+					<CheckButton name="AccountLoginForceLogin">
+						<Size>
+							<AbsDimension x="20" y="20"/>
+						</Size>
+						<Anchors>
+							<Anchor point="RIGHT" relativeTo="AccountLoginForceLoginText" relativePoint="LEFT">
+								<Offset>
+									<AbsDimension x="0" y="0"/>
+								</Offset>
+							</Anchor>
+						</Anchors>
+						<Scripts>
+							<OnLoad>
+								self:SetChecked(0);
+							</OnLoad>
+							<OnClick>
+								if ( self:GetChecked() ) then
+									self:SetChecked(1);
+								else
+									self:SetChecked(0);
+								end
+							</OnClick>
+						</Scripts>
+						<NormalTexture file="Interface\Buttons\UI-CheckBox-Up"/>
+						<PushedTexture file="Interface\Buttons\UI-CheckBox-Down"/>
+						<HighlightTexture file="Interface\Buttons\UI-CheckBox-Highlight" alphaMode="ADD"/>
+						<CheckedTexture file="Interface\Buttons\UI-CheckBox-Check"/>
+						<DisabledCheckedTexture file="Interface\Buttons\UI-CheckBox-Check-Disabled"/>
+					</CheckButton>
+
 					<CheckButton name="AccountLoginShowLauncher">
 						<Size>
 							<AbsDimension x="20" y="20"/>
@@ -1052,7 +1198,7 @@
 									</Layer>
 								</Layers>
 								<Frames>
-									<Button name="ChangedOptionsDialogOkayButton" inherits="GlueButtonTemplateBlue" text="OKAY">
+									<Button name="ChangedOptionsDialogOkayButton" inherits="GlueButtonTemplate" text="OKAY">
 										<Anchors>
 											<Anchor point="BOTTOM" relativePoint="BOTTOM">
 												<Offset>
@@ -1182,7 +1328,7 @@
 											<AbsInset left="15" bottom="5"/>
 										</TextInsets>
 									</EditBox>
-									<Button name="$parentOkayButton" inherits="GlueButtonTemplateBlue" text="OKAY">
+									<Button name="$parentOkayButton" inherits="GlueButtonTemplate" text="OKAY">
 										<Anchors>
 											<Anchor point="BOTTOMLEFT" relativePoint="BOTTOMLEFT">
 												<Offset>
@@ -1196,7 +1342,7 @@
 											</OnClick>
 										</Scripts>
 									</Button>
-									<Button name="$parentCancelButton" inherits="GlueButtonTemplateBlue" text="CANCEL">
+									<Button name="$parentCancelButton" inherits="GlueButtonTemplate" text="CANCEL">
 										<Anchors>
 											<Anchor point="LEFT" relativeTo="$parentOkayButton" relativePoint="RIGHT">
 												<Offset>
@@ -1384,7 +1530,7 @@
 											</ScrollFrame>
 										</Frames>
 									</Frame>
-									<Button name="$parentAcceptButton" inherits="GlueButtonTemplateBlue" text="ACCEPT">
+									<Button name="$parentAcceptButton" inherits="GlueButtonTemplate" text="ACCEPT">
 										<Size>
 											<AbsDimension x="125" y="37"/>
 										</Size>
@@ -1402,7 +1548,7 @@
 											</OnClick>
 										</Scripts>
 									</Button>
-									<Button name="$parentCancelButton" inherits="GlueButtonTemplateBlue" text="CANCEL">
+									<Button name="$parentCancelButton" inherits="GlueButtonTemplate" text="CANCEL">
 										<Size>
 											<AbsDimension x="125" y="37"/>
 										</Size>
@@ -1477,13 +1623,14 @@
 				</Frames>
 				<Scripts>
 					<OnShow>
+						AccountLoginLogo:SetTexture(VX_LOGO_TEXTURE);
 						GlueFrameFadeIn(self, LOGIN_FADE_IN);
 						if ( GetSavedAccountName() == "" ) then
 							AccountLogin_FocusAccountName();
 						else
 							AccountLogin_FocusPassword();
 						end
-	
+
 						if ( not IsSystemSupported() ) then
 							GlueDialog_Show("SYSTEM_INCOMPATIBLE_SSE");
 						end
@@ -2046,7 +2193,7 @@
 							</SimpleHTML>
 						</ScrollChild>
 					</ScrollFrame>
-					<Button name="TOSDecline" inherits="GlueButtonTemplateBlue" text="DECLINE">
+					<Button name="TOSDecline" inherits="GlueButtonTemplate" text="DECLINE">
 						<Size>
 							<AbsDimension x="128" y="34"/>
 						</Size>
@@ -2063,7 +2210,7 @@
 							</OnClick>
 						</Scripts>
 					</Button>
-					<Button name="TOSAccept" inherits="GlueButtonTemplateBlue" text="TOS_ACCEPT">
+					<Button name="TOSAccept" inherits="GlueButtonTemplate" text="TOS_ACCEPT">
 						<Size>
 							<AbsDimension x="128" y="34"/>
 						</Size>
@@ -2505,7 +2652,7 @@
 		<Frames>
 			<Frame name="CinematicsBackground">
 				<Size>
-					<AbsDimension x="272" y="256"/>
+					<AbsDimension x="272" y="400"/>
 				</Size>
 				<Anchors>
 					<Anchor point="CENTER">
@@ -2534,7 +2681,7 @@
 							<Anchors>
 								<Anchor point="TOP">
 									<Offset>
-										<AbsDimension x="0" y="-16"/>
+										<AbsDimension x="0" y="-25"/>
 									</Offset>
 								</Anchor>
 							</Anchors>
@@ -2542,50 +2689,59 @@
 					</Layer>
 				</Layers>
 				<Frames>
-					<Button name="CinematicsButton1" inherits="GlueButtonTemplateBlue" text="WORLD_OF_WARCRAFT" hidden="true" id="1">
-						<Size>
-							<AbsDimension x="240" y="45"/>
-						</Size>
-						<Anchors>
-							<Anchor point="TOP">
-								<Offset>
-									<AbsDimension x="0" y="-50"/>
-								</Offset>
-							</Anchor>
-						</Anchors>
-						<Scripts>
-							<OnClick function="Cinematics_PlayMovie"/>
-						</Scripts>
-					</Button>
-					<Button name="CinematicsButton2" inherits="GlueButtonTemplateBlue" text="BURNING_CRUSADE" hidden="true" id="2">
-						<Size>
-							<AbsDimension x="240" y="45"/>
-						</Size>
-						<Anchors>
-							<Anchor point="TOP" relativeTo="CinematicsButton1" relativePoint="BOTTOM">
-								<Offset>
-									<AbsDimension x="0" y="5"/>
-								</Offset>
-							</Anchor>
-						</Anchors>
-						<Scripts>
-							<OnClick function="Cinematics_PlayMovie"/>
-						</Scripts>						
-					</Button>
 					<Button name="CinematicsButton3" inherits="GlueButtonTemplateBlue" text="WRATH_OF_THE_LICH_KING" hidden="true" id="3">
 						<Size>
-							<AbsDimension x="240" y="45"/>
+							<AbsDimension x="240" y="51"/>
 						</Size>
 						<Anchors>				
-							<Anchor point="TOP" relativeTo="CinematicsButton2" relativePoint="BOTTOM">
+							<Anchor point="BOTTOM">
 								<Offset>
-									<AbsDimension x="0" y="5"/>
+									<AbsDimension x="0" y="25"/>
 								</Offset>
 							</Anchor>
 						</Anchors>	
 						<Scripts>
 							<OnClick function="Cinematics_PlayMovie"/>
+							<OnLoad>
+								self:SetWidth(self:GetTextWidth() + 100);
+							</OnLoad>
 						</Scripts>						
+					</Button>
+					<Button name="CinematicsButton2" inherits="GlueButtonTemplateBlue" text="BURNING_CRUSADE" hidden="true" id="2">
+						<Size>
+							<AbsDimension x="240" y="51"/>
+						</Size>
+						<Anchors>
+							<Anchor point="BOTTOM" relativeTo="CinematicsButton3" relativePoint="TOP">
+								<Offset>
+									<AbsDimension x="0" y="0"/>
+								</Offset>
+							</Anchor>
+						</Anchors>
+						<Scripts>
+							<OnClick function="Cinematics_PlayMovie"/>
+							<OnLoad>
+								self:SetWidth(self:GetTextWidth() + 100);
+							</OnLoad>
+						</Scripts>						
+					</Button>
+					<Button name="CinematicsButton1" inherits="GlueButtonTemplateBlue" text="WORLD_OF_WARCRAFT" hidden="true" id="1">
+						<Size>
+							<AbsDimension x="240" y="51"/>
+						</Size>
+						<Anchors>
+							<Anchor point="BOTTOM" relativeTo="CinematicsButton2" relativePoint="TOP">
+								<Offset>
+									<AbsDimension x="0" y="0"/>
+								</Offset>
+							</Anchor>
+						</Anchors>
+						<Scripts>
+							<OnClick function="Cinematics_PlayMovie"/>
+							<OnLoad>
+								self:SetWidth(self:GetTextWidth() + 100);
+							</OnLoad>
+						</Scripts>
 					</Button>
 				</Frames>
 			</Frame>
